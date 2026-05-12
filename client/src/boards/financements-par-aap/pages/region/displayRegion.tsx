@@ -6,6 +6,7 @@ import Select from "../../../../components/select";
 import Classifications from "../../charts/classifications";
 import Classifications2 from "../../charts/classifications2";
 import FrenchPartners from "../../charts/french-partners";
+import Institutions from "../../charts/institutions";
 import InstrumentsForAnr from "../../charts/instruments-for-anr";
 import InstrumentsForEurope from "../../charts/instruments-for-europe";
 import InstrumentsOverTimeForAnr from "../../charts/instruments-over-time-for-anr";
@@ -35,6 +36,7 @@ export default function DisplayRegion() {
     { id: "financements", label: "Volume et répartition des financements" },
     { id: "evolution", label: "Evolution temporelle" },
     { id: "partenaires", label: "Institutions partenaires" },
+    { id: "institutions", label: "Institutions" },
     { id: "laboratoires", label: "Laboratoires" },
     { id: "disciplines", label: "Disciplines" },
     { id: "instruments", label: "Instruments" },
@@ -210,6 +212,13 @@ export default function DisplayRegion() {
                     </Col>
                   </Row>
                 </>
+              )}
+              {(section === "institutions") && (
+                <Row gutters style={{ clear: "both" }}>
+                  <Col>
+                    <Institutions name={region} />
+                  </Col>
+                </Row>
               )}
               {(section === "laboratoires") && (
                 <Row gutters style={{ clear: "both" }}>

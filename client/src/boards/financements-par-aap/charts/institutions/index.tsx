@@ -14,7 +14,7 @@ import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabe
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function Laboratories({ name }: { name: string | undefined }) {
+export default function Institutions({ name }: { name: string | undefined }) {
   const [selectedControl, setSelectedControl] = useState("projects")
   const [searchParams] = useSearchParams()
   const region = searchParams.get("region")
@@ -23,12 +23,12 @@ export default function Laboratories({ name }: { name: string | undefined }) {
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
 
-  const body = {
+  const body:any = {
     ...getEsQuery({ regions: [region], structures: [structure], yearMax, yearMin }),
     aggregations: {
-      by_laboratory_project: {
+      by_institution_project: {
         terms: {
-          field: "co_partners_fr_labs.keyword",
+          field: "participant_id_name_default.keyword",
           order: { "by_unique_projects": "desc" },
         },
         aggregations: {
@@ -58,9 +58,9 @@ export default function Laboratories({ name }: { name: string | undefined }) {
           },
         },
       },
-      by_laboratory_budget: {
+      by_institution_budget: {
         terms: {
-          field: "co_partners_fr_labs.keyword",
+          field: "participant_id_name_default.keyword",
           order: { "sum_budget": "desc" },
         },
         aggregations: {
@@ -98,9 +98,9 @@ export default function Laboratories({ name }: { name: string | undefined }) {
           },
         },
       },
-      by_laboratory_participation: {
+      by_institution_participation: {
         terms: {
-          field: "co_partners_fr_labs.keyword",
+          field: "participant_id_name_default.keyword",
           order: { "sum_budget_funding": "desc" },
         },
         aggregations: {
@@ -142,7 +142,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-laboratories", region, structure, yearMax, yearMin],
+    queryKey: ["fundings-institutions", region, structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -160,13 +160,13 @@ export default function Laboratories({ name }: { name: string | undefined }) {
   const seriesBudgetRegion: any = [];
   const seriesFundingRegion: any = [];
   const seriesProjectRegion: any = [];
-  const laboratoriesBudget = data?.aggregations?.by_laboratory_budget?.buckets ?? [];
-  const laboratoriesFunding = data?.aggregations?.by_laboratory_participation?.buckets ?? [];
-  const laboratoriesProject = data?.aggregations?.by_laboratory_project?.buckets ?? [];
+  const institutionsBudget = data?.aggregations?.by_institution_budget?.buckets ?? [];
+  const institutionsFunding = data?.aggregations?.by_institution_participation?.buckets ?? [];
+  const institutionsProject = data?.aggregations?.by_institution_project?.buckets ?? [];
   funders.forEach((funder) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: laboratoriesBudget.map((bucket) => bucket.by_project_type.buckets
+      data: institutionsBudget.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
@@ -174,7 +174,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
     });
     seriesBudget.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: laboratoriesBudget.map((bucket) => bucket.by_project_type.buckets
+      data: institutionsBudget.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
@@ -182,7 +182,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
     });
     seriesBudgetRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: laboratoriesBudget.map((bucket) => bucket
+      data: institutionsBudget.map((bucket) => bucket
         ?.by_project_type.buckets?.find((bucket) => bucket.key === funder)
         ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_budget?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget?.value ?? 0), 0)
         ?? 0),
@@ -190,7 +190,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
     });
     seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: laboratoriesFunding.map((bucket) => bucket.by_project_type.buckets
+      data: institutionsFunding.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
@@ -198,7 +198,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
     });
     seriesFunding.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: laboratoriesFunding.map((bucket) => bucket.by_project_type.buckets
+      data: institutionsFunding.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
@@ -206,7 +206,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
     });
     seriesFundingRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: laboratoriesFunding.map((bucket) => bucket
+      data: institutionsFunding.map((bucket) => bucket
         ?.by_project_type.buckets?.find((bucket) => bucket.key === funder)
         ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_funding?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget_funding?.value ?? 0), 0)
         ?? 0),
@@ -214,32 +214,32 @@ export default function Laboratories({ name }: { name: string | undefined }) {
     });
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: laboratoriesProject.map((bucket) => bucket.by_project_type.buckets
+      data: institutionsProject.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesProject.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: laboratoriesProject.map((bucket) => bucket.by_project_type.buckets
+      data: institutionsProject.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesProjectRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: laboratoriesProject.map((bucket) => bucket
+      data: institutionsProject.map((bucket) => bucket
         ?.by_project_type.buckets?.find((bucket) => bucket.key === funder)
         ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.unique_projects?.value ?? 0), 0)
         ?? 0),
       name: funder,
     });
   });
-  const categoriesBudget = laboratoriesBudget.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
-  const categoriesFunding = laboratoriesFunding.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
-  const categoriesProject = laboratoriesProject.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
+  const categoriesBudget = institutionsBudget.map((bucket) => bucket.key.split('###')[1]);
+  const categoriesFunding = institutionsFunding.map((bucket) => bucket.key.split('###')[1]);
+  const categoriesProject = institutionsProject.map((bucket) => bucket.key.split('###')[1]);
 
-  const title = `Principaux laboratoires de ${structure ? "l'établissement" : "la région"} ${name} impliqués dans les projets par AAP ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const title = `Principaux établissements de ${structure ? "l'établissement" : "la région"} ${name} impliqués dans les projets par AAP ${getYearRangeLabel({ yearMax, yearMin })}`;
   // If view by number of projects
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');
   let categories = categoriesProject;
@@ -293,8 +293,8 @@ export default function Laboratories({ name }: { name: string | undefined }) {
         Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
       </>
     },
-    id: "laboratories",
-    integrationURL: `/integration?chart_id=laboratories&${searchParams.toString()}`,
+    id: "institutions",
+    integrationURL: `/integration?chart_id=institutions&${searchParams.toString()}`,
     title,
   };
 
@@ -327,7 +327,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="laboratories">
+    <div className={`chart-container chart-container--${color}`} id="institutions">
       <Title as="h2" look="h6">
         {title}
       </Title>
