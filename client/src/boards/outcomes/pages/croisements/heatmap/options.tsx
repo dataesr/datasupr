@@ -75,6 +75,9 @@ export function createHeatmapOptions({
             marginTop: 60,
             marginBottom: 80,
         },
+        title: {
+            text: " ",
+        },
         xAxis: {
             categories: xCategories,
             opposite: true,

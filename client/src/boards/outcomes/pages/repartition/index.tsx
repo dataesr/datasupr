@@ -169,8 +169,8 @@ export default function RepartitionPage() {
             </Row>
             <Row gutters>
                 <Col lg={4}>
-                    <aside className="outcomes-flux-page__filters" aria-label="Filtres du graphique de répartition">
-                        <Title as="h2" look="h3" className="fr-mb-3w">Filtres à sélectionner</Title>
+                    <section className="outcomes-flux-page__filters" aria-label="Filtres du graphique de répartition">
+                        <Title as="h2" look="h4" className="fr-mb-3w">Filtres à sélectionner</Title>
                         {FILTER_SECTIONS.map((section) => (
                             <section key={section.title} className="outcomes-flux-page__filters-section">
                                 <Title as="h3" look="h5" className="fr-mb-2w">{section.title}</Title>
@@ -186,7 +186,7 @@ export default function RepartitionPage() {
                             </section>
                         ))}
                         <Button className="fr-mt-3w" onClick={resetFilters}>Réinitialiser les filtres</Button>
-                    </aside>
+                    </section>
                 </Col>
                 <Col lg={8}>
                     <div className="outcomes-flux-page__content">

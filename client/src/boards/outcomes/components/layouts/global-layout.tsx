@@ -86,7 +86,9 @@ export default function GlobalLayout() {
           </div>
         </div>
       </header>
-      <Outlet />
+      <main id="main-content" tabIndex={-1}>
+        <Outlet />
+      </main>
       <Footer href="/devenir-etudiants/flux" title="#dataESR tableaux de bord" />
     </>
   );

@@ -219,7 +219,7 @@ export default function FluxPage() {
             </Row>
             <Row gutters>
                 <Col lg={4}>
-                    <aside className="outcomes-flux-page__filters" aria-label="Filtres du graphique de flux">
+                    <section className="outcomes-flux-page__filters" aria-label="Filtres du graphique de flux">
                         <Title as="h2" look="h4" className="fr-mb-3w">Filtres à sélectionner</Title>
                         {FILTER_SECTIONS.map((section) => (
                             <section key={section.title} className="outcomes-flux-page__filters-section">
@@ -236,7 +236,7 @@ export default function FluxPage() {
                             </section>
                         ))}
                         <Button className="fr-mt-3w" onClick={resetFilters}>Réinitialiser les filtres</Button>
-                    </aside>
+                    </section>
                 </Col>
                 <Col lg={8}>
                     <div className="outcomes-flux-page__content">

@@ -35,13 +35,11 @@ export default function ComparaisonProfilsPage() {
                     </Title>
                 </Col>
             </Row>
-
             <ProfilesTab
                 axisOptions={baseData?.filterOptions ?? null}
                 isLoadingOptions={baseLoading}
                 cohortTotal={baseData?.totalStudents ?? 0}
             />
-
             <OutcomesDefinitionsTable definitions={OUTCOMES_DEFINITIONS} />
         </Container>
     );

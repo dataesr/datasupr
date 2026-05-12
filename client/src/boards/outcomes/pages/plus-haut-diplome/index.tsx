@@ -174,7 +174,7 @@ export default function PlusHautDiplomePage() {
             </Row>
             <Row gutters>
                 <Col lg={4}>
-                    <aside className="outcomes-flux-page__filters" aria-label="Filtres du tableau plus haut diplôme">
+                    <section className="outcomes-flux-page__filters" aria-label="Filtres du tableau plus haut diplôme">
                         <Title as="h2" look="h4" className="fr-mb-3w">Filtres à sélectionner</Title>
                         {FILTER_SECTIONS.map((section) => (
                             <section key={section.title} className="outcomes-flux-page__filters-section">
@@ -191,7 +191,7 @@ export default function PlusHautDiplomePage() {
                             </section>
                         ))}
                         <Button className="fr-mt-3w" onClick={resetFilters}>Réinitialiser les filtres</Button>
-                    </aside>
+                    </section>
                 </Col>
                 <Col lg={8}>
                     <div className="outcomes-flux-page__content">
@@ -254,20 +254,32 @@ export default function PlusHautDiplomePage() {
                                     </table>
                                 </div>
 
-                                <div className="outcomes-phd__kpis fr-mb-2w fr-mt-3w">
-                                    <div className="outcomes-phd__kpi fr-p-2w">
-                                        <p className="fr-text--sm fr-mb-1v">Néo-bacheliers inscrits en L1 en 2019</p>
-                                        <p className="fr-h4 fr-mb-0">{formatNumber(data.totalStudents)}</p>
-                                    </div>
-                                    <div className="outcomes-phd__kpi fr-p-2w">
-                                        <p className="fr-text--sm fr-mb-1v">Diplômés en {lastYearLabel}</p>
-                                        <p className="fr-h4 fr-mb-0">{formatNumber(data.totals.diplomes.effectif)}</p>
-                                    </div>
-                                    <div className="outcomes-phd__kpi fr-p-2w">
-                                        <p className="fr-text--sm fr-mb-1v">Non diplômés en {lastYearLabel}</p>
-                                        <p className="fr-h4 fr-mb-0">{formatNumber(data.totals.nonDiplomes.effectif)}</p>
-                                    </div>
-                                </div>
+                                <Row gutters className="fr-mb-2w fr-mt-3w">
+                                    <Col xs={12} md={4}>
+                                        <div className="fr-tile fr-tile--sm fr-tile--no-icon">
+                                            <div className="fr-tile__body">
+                                                <h3 className="fr-tile__title">Néo-bacheliers inscrits en L1 en 2019</h3>
+                                                <p className="fr-tile__desc">{formatNumber(data.totalStudents)}</p>
+                                            </div>
+                                        </div>
+                                    </Col>
+                                    <Col xs={12} md={4}>
+                                        <div className="fr-tile fr-tile--sm fr-tile--no-icon">
+                                            <div className="fr-tile__body">
+                                                <h3 className="fr-tile__title">Diplômés en {lastYearLabel}</h3>
+                                                <p className="fr-tile__desc">{formatNumber(data.totals.diplomes.effectif)}</p>
+                                            </div>
+                                        </div>
+                                    </Col>
+                                    <Col xs={12} md={4}>
+                                        <div className="fr-tile fr-tile--sm fr-tile--no-icon">
+                                            <div className="fr-tile__body">
+                                                <h3 className="fr-tile__title" >Non diplômés en {lastYearLabel}</h3>
+                                                <p className="fr-tile__desc">{formatNumber(data.totals.nonDiplomes.effectif)}</p>
+                                            </div>
+                                        </div>
+                                    </Col>
+                                </Row>
 
                                 <Row className="fr-mt-3w">
                                     <Col>

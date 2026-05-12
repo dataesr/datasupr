@@ -1,4 +1,4 @@
-import { Col, Row, Text, Title } from "@dataesr/dsfr-plus";
+import { Col, Row, Title } from "@dataesr/dsfr-plus";
 import { useQueries } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -132,13 +132,42 @@ export default function HeatmapTab() {
     return (
         <Row gutters>
             <Col lg={4}>
-                <aside className="outcomes-flux-page__filters" aria-label="Axes du croisement">
-                    <Title as="h2" look="h3" className="fr-mb-3w">Axes à croiser</Title>
+                <section className="outcomes-flux-page__filters" aria-label="Axes du croisement">
+                    <Title as="h2" look="h4" className="fr-mb-3w">Axes à croiser</Title>
                     <section className="outcomes-flux-page__filters-section">
                         {renderAxisSelect("Axe vertical", vAxis, hAxis, setVAxis)}
                         {renderAxisSelect("Axe horizontal", hAxis, vAxis, setHAxis)}
                     </section>
-                </aside>
+                </section>
+
+                {!sameAxis && !isLoading && chartOptions && (
+                    <Row gutters className="fr-mt-2w">
+                        {([
+                            { key: "max", label: "Taux le plus élevé", cell: maxCell },
+                            { key: "min", label: "Taux le plus faible", cell: minCell },
+                        ] as const).map(({ label, cell }) => {
+                            const share = cell && ensembleTotal ? (cell.count / ensembleTotal) * 100 : null;
+                            return (
+                                <Col key={label} xs={12}>
+                                    <div className="fr-tile fr-tile--sm fr-tile--no-icon">
+                                        <div className="fr-tile__body">
+                                            <h3 className="fr-tile__title">{label}</h3>
+                                            <p className="fr-tile__desc">{cell ? `${cell.pct.toFixed(0)}%` : "—"}{cell ? ` — ${cell.vLabel} × ${cell.hLabel}` : ""}{share !== null ? ` (${share.toFixed(0)}% des étudiants)` : ""}</p>
+                                        </div>
+                                    </div>
+                                </Col>
+                            );
+                        })}
+                        <Col xs={12}>
+                            <div className="fr-tile fr-tile--sm fr-tile--no-icon">
+                                <div className="fr-tile__body">
+                                    <h3 className="fr-tile__title">Plus grand écart</h3>
+                                    <p className="fr-tile__desc">{minCell && maxCell ? `${Math.round(maxCell.pct - minCell.pct)} pts` : "—"}</p>
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
+                )}
             </Col>
             <Col lg={8}>
                 <div className="outcomes-flux-page__content">
@@ -155,41 +184,12 @@ export default function HeatmapTab() {
                             <Title as="h2" look="h5" className="fr-mb-3w">
                                 {`${vAxisLabel} × ${hAxisLabel} — taux de diplômés dans le supérieur en 2023-2024 des néo-bacheliers inscrits en L1 en 2019`}
                             </Title>
-                            <Row gutters>
-                                {([
-                                    { key: "max", label: "Taux de diplômés le plus élevé", cell: maxCell },
-                                    { key: "min", label: "Taux de diplômés le plus faible", cell: minCell },
-                                ] as const).map(({ key, label, cell }) => {
-                                    const share = cell && ensembleTotal ? (cell.count / ensembleTotal) * 100 : null;
-                                    return (
-                                        <Col key={key} xs={12} md={4}>
-                                            <div className={`outcomes-croisements__card outcomes-croisements__card--${key} fr-p-2w`}>
-                                                <Text size="sm" className="fr-mb-0" bold>{label}</Text>
-                                                <p className="fr-h3 fr-mb-0">{cell ? `${cell.pct.toFixed(0)}%` : "—"}</p>
-                                                <Text size="sm" className="fr-mb-0">{cell ? `${cell.vLabel} × ${cell.hLabel}` : "—"}</Text>
-                                                {share !== null && (
-                                                    <Text size="sm" className="fr-mb-0">{`${share.toFixed(0)}% des étudiants concernés`}</Text>
-                                                )}
-                                            </div>
-                                        </Col>
-                                    );
-                                })}
-                                <Col xs={12} md={4}>
-                                    <div className="outcomes-croisements__card outcomes-croisements__card--gap fr-p-2w">
-                                        <Text size="sm" className="fr-mb-0" bold>Plus grand écart</Text>
-                                        <p className="fr-h3 fr-mb-0">{minCell && maxCell ? `${Math.round(maxCell.pct - minCell.pct)} pts` : "—"}</p>
-                                    </div>
-                                </Col>
-                            </Row>
-
                             <ChartWrapper
                                 hideTitle
                                 config={{
                                     id: "outcomes-croisements-heatmap",
                                     integrationURL: `/integration?chart_id=outcomesCroisementsHeatmap&v_axis=${vAxis}&h_axis=${hAxis}`,
                                     title: `${vAxisLabel} × ${hAxisLabel} — taux de diplômés dans le supérieur en 2023-2024 des néo-bacheliers inscrits en L1 en 2019`,
-                                    subtitle: "Néo-bacheliers inscrits en L1 en 2019 · observation à 5 ans (2023-2024)",
-                                    sources: [{ label: { fr: <>MESRE-SIES</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
                                     readingKey: {
                                         fr: (
                                             <>
@@ -199,7 +199,6 @@ export default function HeatmapTab() {
                                             </>
                                         ),
                                     },
-
                                 }}
                                 options={chartOptions}
                             />

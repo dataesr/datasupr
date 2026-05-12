@@ -220,7 +220,6 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal
             <Text className="fr-mb-2w">
                 Sélectionnez 2 ou 3 profils pour comparer leurs trajectoires côte à côte.
             </Text>
-
             <Row gutters>
                 {profiles.map((p, i) => {
                     const colSize = profiles.length === 3 ? 4 : 6;
@@ -255,13 +254,13 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal
 
             <Text size="sm" className="fr-mt-3w">Part de chaque profil encore inscrite en formation supérieure</Text>
             <ChartWrapper
-                config={{ id: "outcomes-profiles-line", title: "Position au fil des années", integrationURL, sources: [{ label: { fr: <>MESRE-SIES</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }] }}
+                config={{ id: "outcomes-profiles-line", title: "Position au fil des années", integrationURL }}
                 options={lineOptions}
             />
 
             <Text size="sm" className="fr-mt-3w">Répartition à 5 ans par profil</Text>
             <ChartWrapper
-                config={{ id: "outcomes-profiles-stack", title: "Diplômés du supérieur vs sortants sans diplôme", integrationURL, sources: [{ label: { fr: <>MESRE-SIES</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }] }}
+                config={{ id: "outcomes-profiles-stack", title: "Diplômés du supérieur vs sortants sans diplôme", integrationURL }}
                 options={stackOptions}
             />
 
@@ -283,7 +282,7 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal
                                 ) : (
                                     <ChartWrapper
                                         hideTitle
-                                        config={{ id: `outcomes-profiles-donut-${badge}`, title: `Plus haut diplôme — Profil ${badge}`, sources: [{ label: { fr: <>MESRE-SIES</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }] }}
+                                        config={{ id: `outcomes-profiles-donut-${badge}`, title: `Plus haut diplôme — Profil ${badge}` }}
                                         options={createDiplomaDonutOptions(d.rows, { effectif: d.nonDipl }, `Profil ${badge}`)}
                                     />
                                 )}
