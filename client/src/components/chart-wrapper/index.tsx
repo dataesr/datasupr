@@ -2,6 +2,7 @@ import { Button, Col, Container, Modal, ModalContent, ModalTitle, Radio, Row, Ti
 import Highcharts from "highcharts/es-modules/masters/highcharts.src.js"
 import HighchartsReact from "highcharts-react-official"
 import "highcharts/es-modules/masters/highcharts-more.src.js"
+import "highcharts/es-modules/masters/modules/heatmap.src.js";
 import "highcharts/es-modules/masters/modules/exporting.src.js"
 import "highcharts/es-modules/masters/modules/export-data.src.js"
 import "highcharts/es-modules/masters/modules/map.src.js"

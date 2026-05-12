@@ -1,5 +1,4 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
-import "highcharts/es-modules/masters/modules/heatmap.src.js";
 import { createChartOptions } from "../../../../../components/chart-wrapper/default-options";
 
 
