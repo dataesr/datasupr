@@ -1,26 +1,27 @@
-import { Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus"
+import { useQuery } from "@tanstack/react-query"
+import { useEffect, useState } from "react"
+import { useSearchParams } from "react-router-dom"
 
-import Breadcrumb from "../../components/breadcrumb";
-import CardSimple from "../../components/card-simple";
-import { getEsQuery } from "../../utils.ts";
-import DisplayRegion from "./displayRegion.tsx";
+import Breadcrumb from "../../components/breadcrumb"
+import CardSimple from "../../components/card-simple"
+import { getEsQuery } from "../../utils.ts"
+import DisplayRegion from "./displayRegion.tsx"
 
-import "./styles.scss";
+import "./styles.scss"
 
-const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
 
 export default function regions() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const region = searchParams.get("region");
-  const [regions, setRegions] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams()
+  const region = searchParams.get("region")
+  const [regions, setRegions] = useState([])
 
   const handleRegion = (region) => {
-    searchParams.set("region", region);
-    setSearchParams(searchParams);
+    searchParams.set("region", region)
+    searchParams.delete("structure")
+    setSearchParams(searchParams)
   };
 
   const body: any = {
@@ -33,7 +34,7 @@ export default function regions() {
         },
       },
     },
-  };
+  }
 
   const { data } = useQuery({
     queryKey: ["fundings-regions"],

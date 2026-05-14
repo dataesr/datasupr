@@ -1,30 +1,31 @@
-import { Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus"
+import { useEffect, useState } from "react"
+import { useSearchParams } from "react-router-dom"
 
-import CardSimple from "../../components/card-simple";
-import Breadcrumb from "../../components/breadcrumb";
-import StructureSelector from "./components/structure-selector";
-import DisplayStructure from "./displayStructure";
+import Breadcrumb from "../../components/breadcrumb"
+import CardSimple from "../../components/card-simple"
+import StructureSelector from "./components/structure-selector"
+import DisplayStructure from "./displayStructure"
 
-import "./styles.scss";
+import "./styles.scss"
 
 
 export default function Structures() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const structure = searchParams.get("structure");
-  const [structures, setStructures] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams()
+  const structure = searchParams.get("structure")
+  const [structures, setStructures] = useState([])
 
   useEffect(() => {
     if (!searchParams.get("section")) {
-      searchParams.set("section", "apercu");
-      setSearchParams(searchParams);
+      searchParams.set("section", "apercu")
+      setSearchParams(searchParams)
     }
-  }, [searchParams, setSearchParams]);
+  }, [searchParams, setSearchParams])
 
   const handleStructure = (structure) => {
-    searchParams.set("structure", structure);
-    setSearchParams(searchParams);
+    searchParams.set("structure", structure)
+    searchParams.delete("region")
+    setSearchParams(searchParams)
   };
 
   return (
