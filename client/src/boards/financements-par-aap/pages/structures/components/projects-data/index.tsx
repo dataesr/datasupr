@@ -1,6 +1,6 @@
 import { Button, Col, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
@@ -49,7 +49,7 @@ export default function ProjectsData() {
 
   const [filters, setFilters] = useState<Filter[]>([])
   const [pagination, setPagination] = useState({ from: 0, size: 10 })
-  const [sorting, setSorting] = useState<Sort>();
+  const [sorting, setSorting] = useState<Sort>({ id: 'project_budgetFinanced', order: 'desc' });
 
   const body = {
     ...getEsQuery({ structures: [structure], yearMax, yearMin }),

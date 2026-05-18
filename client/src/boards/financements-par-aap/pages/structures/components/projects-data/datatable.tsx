@@ -12,29 +12,16 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
 
   const getSortableIcon = (column) => {
     if (column.isSortable) {
-      const id = column?.sortableField ?? column.id;
-      if ((id === sorting?.id) && (sorting?.order === 'asc')) return (
+      const id = column?.sortableField ?? column.id
+      let icon = <i className="ri-arrow-up-down-fill" />
+      if ((id === sorting?.id) && (sorting?.order === 'asc')) icon = <i className="ri-sort-asc" />
+      if ((id === sorting?.id) && (sorting?.order === 'desc')) icon = <i className="ri-sort-desc" />
+      return (
         <button
           className="button-action border p-1 rounded"
           onClick={() => handleSort(column)}
         >
-          <i className="ri-sort-asc" />
-        </button>
-      )
-      if ((id === sorting?.id) && (sorting?.order === 'desc')) return (
-        <button
-          className="button-action border p-1 rounded"
-          onClick={() => handleSort(column)}
-        >
-          <i className="ri-sort-desc" />
-        </button>
-      )
-      else return (
-        <button
-          className="button-action border p-1 rounded"
-          onClick={() => handleSort(column)}
-        >
-          <i className="ri-subtract-line" />
+          {icon}
         </button>
       )
     }

@@ -46,7 +46,6 @@ const getEsQuery = ({ regions, structures, yearMax = years[years.length - 1], ye
           { range: { project_year: { gte: yearMin, lte: yearMax } } },
           { term: { participant_isFrench: true } },
           { term: { participant_status: "active" } },
-          { term: { "participant_kind.keyword": "Secteur public" } },
           { terms: { "project_type.keyword": funders } },
           { bool: { must_not: { terms: { "participant_typologie_1.keyword": typologiesExcluded } } } },
         ],
@@ -58,6 +57,7 @@ const getEsQuery = ({ regions, structures, yearMax = years[years.length - 1], ye
     query.query.bool.filter.push({ term: { participant_is_main_parent: 1 } });
     query.query.bool.filter.push({ term: { participant_type: "institution" } });
     query.query.bool.filter.push({ terms: { "participant_id.keyword": structuresNotNull } });
+    query.query.bool.filter.push({ term: { "participant_kind.keyword": "Secteur public" } });
   };
   const regionsNotNull = regions?.filter((region) => region !== null);
   if (regionsNotNull?.length ?? 0 > 0) {
