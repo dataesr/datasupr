@@ -32,7 +32,7 @@ export default function DispersionByComparison() {
               size: structures.length,
             },
             aggregations: {
-              unique_projects: {
+              by_unique_project: {
                 cardinality: {
                   field: "project_id.keyword",
                 },
@@ -70,7 +70,7 @@ export default function DispersionByComparison() {
   const series = (data?.aggregations?.by_typology?.buckets ?? []).map((typology) => ({
     data: (typology?.by_structure?.buckets ?? []).map((structure) => ({
       name: (Object.fromEntries(new URLSearchParams(structure.key))).label,
-      x: structure?.unique_projects?.value ?? 0,
+      x: structure?.by_unique_project?.value ?? 0,
       y: structure?.sum_budget?.value ?? 0,
       yFormatted: `${formatCompactNumber(structure?.sum_budget?.value ?? 0)} €`,
       z: structure?.unique_labs?.value ?? 0,

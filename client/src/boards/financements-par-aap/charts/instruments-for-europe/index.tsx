@@ -36,11 +36,16 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
               field: "participation_is_coordinator",
             },
             aggregations: {
-              unique_projects: {
+              by_unique_project: {
                 cardinality: {
                   field: "project_id.keyword",
                 },
               },
+            },
+          },
+          by_unique_project: {
+            cardinality: {
+              field: "project_id.keyword",
             },
           },
         },
@@ -76,15 +81,28 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
               },
             },
           },
+          should_ignore_budget: {
+            terms: {
+              field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
+              missing: 0,
+            },
+            aggregations: {
+              sum_budget: {
+                sum: {
+                  field: "project_budgetFinanced",
+                },
+              },
+            },
+          },
         },
       },
-      by_instrument_participation: {
+      by_instrument_funding: {
         terms: {
           field: "project_instrument.keyword",
-          order: { "sum_budget_funding": "desc" },
+          order: { "sum_funding": "desc" },
         },
         aggregations: {
-          sum_budget_funding: {
+          sum_funding: {
             sum: {
               field: "participation_funding",
             },
@@ -100,11 +118,24 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
                   missing: 0,
                 },
                 aggregations: {
-                  sum_budget_funding: {
+                  sum_funding: {
                     sum: {
                       field: "participation_funding",
                     },
                   },
+                },
+              },
+            },
+          },
+          should_ignore_funding: {
+            terms: {
+              field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+              missing: 0,
+            },
+            aggregations: {
+              sum_funding: {
+                sum: {
+                  field: "participation_funding",
                 },
               },
             },
@@ -135,7 +166,7 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
   const seriesFundingRegion: any = [];
   const seriesProjectRegion: any = [];
   const instrumentsBudget = data?.aggregations?.by_instrument_budget?.buckets ?? [];
-  const instrumentsFunding = data?.aggregations?.by_instrument_participation?.buckets ?? [];
+  const instrumentsFunding = data?.aggregations?.by_instrument_funding?.buckets ?? [];
   const instrumentsProject = data?.aggregations?.by_instrument_project?.buckets ?? [];
   instrumentsBudget.forEach((instrument) => {
     seriesBudget.push({
@@ -155,7 +186,7 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
     seriesBudgetRegion.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       name: instrument.key,
-      value: instrument?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_budget?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget?.value ?? 0), 0) ?? 0,
+      value: instrument?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0,
     });
   });
   instrumentsFunding.forEach((instrument) => {
@@ -164,19 +195,19 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0,
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0,
     });
     seriesFunding.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0,
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0,
     });
     seriesFundingRegion.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       name: instrument.key,
-      value: instrument?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_funding?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget_funding?.value ?? 0), 0) ?? 0,
+      value: instrument?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0,
     });
   });
   instrumentsProject.forEach((instrument) => {
@@ -184,18 +215,18 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0,
+        ?.find((bucket) => bucket.key === 1)?.by_unique_project?.value ?? 0,
     });
     seriesProject.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0,
+        ?.find((bucket) => bucket.key === 0)?.by_unique_project?.value ?? 0,
     });
     seriesProjectRegion.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       name: instrument.key,
-      value: instrument?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.unique_projects?.value ?? 0), 0) ?? 0,
+      value: instrument?.by_unique_project?.value ?? 0,
     });
   });
 

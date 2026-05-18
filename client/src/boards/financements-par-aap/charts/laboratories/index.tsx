@@ -29,10 +29,10 @@ export default function Laboratories({ name }: { name: string | undefined }) {
       by_laboratory_project: {
         terms: {
           field: "co_partners_fr_labs.keyword",
-          order: { "by_unique_projects": "desc" },
+          order: { "by_unique_project": "desc" },
         },
         aggregations: {
-          by_unique_projects: {
+          by_unique_project: {
             cardinality: {
               field: "project_id.keyword",
             },
@@ -47,11 +47,16 @@ export default function Laboratories({ name }: { name: string | undefined }) {
                   field: "participation_is_coordinator",
                 },
                 aggregations: {
-                  unique_projects: {
+                  by_unique_project: {
                     cardinality: {
                       field: "project_id.keyword",
                     },
                   },
+                },
+              },
+              by_unique_project: {
+                cardinality: {
+                  field: "project_id.keyword",
                 },
               },
             },
@@ -94,17 +99,30 @@ export default function Laboratories({ name }: { name: string | undefined }) {
                   },
                 },
               },
+              should_ignore_budget: {
+                terms: {
+                  field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
+                  missing: 0,
+                },
+                aggregations: {
+                  sum_budget: {
+                    sum: {
+                      field: "project_budgetFinanced",
+                    },
+                  },
+                },
+              },
             },
           },
         },
       },
-      by_laboratory_participation: {
+      by_laboratory_funding: {
         terms: {
           field: "co_partners_fr_labs.keyword",
-          order: { "sum_budget_funding": "desc" },
+          order: { "sum_funding": "desc" },
         },
         aggregations: {
-          sum_budget_funding: {
+          sum_funding: {
             sum: {
               field: "participation_funding",
             },
@@ -125,11 +143,24 @@ export default function Laboratories({ name }: { name: string | undefined }) {
                       missing: 0,
                     },
                     aggregations: {
-                      sum_budget_funding: {
+                      sum_funding: {
                         sum: {
                           field: "participation_funding",
                         },
                       },
+                    },
+                  },
+                },
+              },
+              should_ignore_funding: {
+                terms: {
+                  field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+                  missing: 0,
+                },
+                aggregations: {
+                  sum_funding: {
+                    sum: {
+                      field: "participation_funding",
                     },
                   },
                 },
@@ -161,7 +192,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
   const seriesFundingRegion: any = [];
   const seriesProjectRegion: any = [];
   const laboratoriesBudget = data?.aggregations?.by_laboratory_budget?.buckets ?? [];
-  const laboratoriesFunding = data?.aggregations?.by_laboratory_participation?.buckets ?? [];
+  const laboratoriesFunding = data?.aggregations?.by_laboratory_funding?.buckets ?? [];
   const laboratoriesProject = data?.aggregations?.by_laboratory_project?.buckets ?? [];
   funders.forEach((funder) => {
     seriesBudget.push({
@@ -184,8 +215,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: laboratoriesBudget.map((bucket) => bucket
         ?.by_project_type.buckets?.find((bucket) => bucket.key === funder)
-        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_budget?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget?.value ?? 0), 0)
-        ?? 0),
+        ?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       name: funder,
     });
     seriesFunding.push({
@@ -193,7 +223,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
       data: laboratoriesFunding.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0),
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesFunding.push({
@@ -201,37 +231,35 @@ export default function Laboratories({ name }: { name: string | undefined }) {
       data: laboratoriesFunding.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0),
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesFundingRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: laboratoriesFunding.map((bucket) => bucket
         ?.by_project_type.buckets?.find((bucket) => bucket.key === funder)
-        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_funding?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget_funding?.value ?? 0), 0)
-        ?? 0),
+        ?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       name: funder,
     });
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
       data: laboratoriesProject.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
+        ?.find((bucket) => bucket.key === 1)?.by_unique_project?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesProject.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: laboratoriesProject.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
+        ?.find((bucket) => bucket.key === 0)?.by_unique_project?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesProjectRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: laboratoriesProject.map((bucket) => bucket
         ?.by_project_type.buckets?.find((bucket) => bucket.key === funder)
-        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.unique_projects?.value ?? 0), 0)
-        ?? 0),
+        ?.by_unique_project?.value ?? 0),
       name: funder,
     });
   });

@@ -1,18 +1,18 @@
-import { Title } from "@dataesr/dsfr-plus";
-import { useQuery } from "@tanstack/react-query";
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
-import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Title } from "@dataesr/dsfr-plus"
+import { useQuery } from "@tanstack/react-query"
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js"
+import { useState } from "react"
+import { useSearchParams } from "react-router-dom"
 
-import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
-import { useChartColor } from "../../../../hooks/useChartColor.tsx";
-import { getI18nLabel } from "../../../../utils.tsx";
-import ChartWrapperFundings from "../../components/chart-wrapper-fundings/index.tsx";
-import SegmentedControl from "../../components/segmented-control/index.tsx";
-import i18n from "../../i18n.json";
-import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx"
+import { useChartColor } from "../../../../hooks/useChartColor.tsx"
+import { getI18nLabel } from "../../../../utils.tsx"
+import ChartWrapperFundings from "../../components/chart-wrapper-fundings/index.tsx"
+import SegmentedControl from "../../components/segmented-control/index.tsx"
+import i18n from "../../i18n.json"
+import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts"
 
-const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
 export default function Classifications({ name }: { name: string | undefined }) {
   const [selectedControl, setSelectedControl] = useState("projects")
@@ -42,11 +42,16 @@ export default function Classifications({ name }: { name: string | undefined }) 
                   field: "participation_is_coordinator",
                 },
                 aggregations: {
-                  unique_projects: {
+                  by_unique_project: {
                     cardinality: {
                       field: "project_id.keyword",
                     },
                   },
+                },
+              },
+              by_unique_project: {
+                cardinality: {
+                  field: "project_id.keyword",
                 },
               },
             },
@@ -90,6 +95,19 @@ export default function Classifications({ name }: { name: string | undefined }) 
                   },
                 },
               },
+              should_ignore_budget: {
+                terms: {
+                  field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
+                  missing: 0,
+                },
+                aggregations: {
+                  sum_budget: {
+                    sum: {
+                      field: "project_budgetFinanced",
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -97,11 +115,11 @@ export default function Classifications({ name }: { name: string | undefined }) 
       by_classifications_funding: {
         terms: {
           field: "project_classification.primary_field.keyword",
-          order: { "sum_budget_funding": "desc" },
+          order: { "sum_funding": "desc" },
           size: 15,
         },
         aggregations: {
-          sum_budget_funding: {
+          sum_funding: {
             sum: {
               field: "participation_funding",
             },
@@ -122,11 +140,24 @@ export default function Classifications({ name }: { name: string | undefined }) 
                       missing: 0,
                     },
                     aggregations: {
-                      sum_budget_funding: {
+                      sum_funding: {
                         sum: {
                           field: "participation_funding",
                         },
                       },
+                    },
+                  },
+                },
+              },
+              should_ignore_funding: {
+                terms: {
+                  field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+                  missing: 0,
+                },
+                aggregations: {
+                  sum_funding: {
+                    sum: {
+                      field: "participation_funding",
                     },
                   },
                 },
@@ -181,8 +212,7 @@ export default function Classifications({ name }: { name: string | undefined }) 
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: classificationsBudget.map((classification) => classification
         ?.by_project_type.buckets?.find((project) => project.key === funder)
-        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_budget?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget?.value ?? 0), 0)
-        ?? 0),
+        ?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       name: funder,
     });
     seriesFunding.push({
@@ -190,7 +220,7 @@ export default function Classifications({ name }: { name: string | undefined }) 
       data: classificationsFunding.map((classification) => classification.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0),
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesFunding.push({
@@ -198,37 +228,35 @@ export default function Classifications({ name }: { name: string | undefined }) 
       data: classificationsFunding.map((classification) => classification.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0),
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesFundingRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: classificationsFunding.map((classification) => classification
         ?.by_project_type.buckets?.find((project) => project.key === funder)
-        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_funding?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget_funding?.value ?? 0), 0)
-        ?? 0),
+        ?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       name: funder,
     });
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
       data: classificationsProject.map((classification) => classification.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
+        ?.find((bucket) => bucket.key === 1)?.by_unique_project?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesProject.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: classificationsProject.map((classification) => classification.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
+        ?.find((bucket) => bucket.key === 0)?.by_unique_project?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesProjectRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: classificationsProject.map((classification) => classification
         ?.by_project_type.buckets?.find((project) => project.key === funder)
-        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.unique_projects?.value ?? 0), 0)
-        ?? 0),
+        ?.by_unique_project?.value ?? 0),
       name: funder,
     });
   });

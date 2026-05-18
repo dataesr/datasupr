@@ -43,7 +43,7 @@ export default function ClassificationsByComparison() {
                   field: "participation_is_coordinator",
                 },
                 aggregations: {
-                  unique_projects: {
+                  by_unique_project: {
                     cardinality: {
                       field: "project_id.keyword",
                     },
@@ -88,14 +88,14 @@ export default function ClassificationsByComparison() {
           },
         },
       },
-      by_structure_participation: {
+      by_structure_funding: {
         terms: {
           field: "participant_encoded_key",
-          order: { "sum_budget_funding": "desc" },
+          order: { "sum_funding": "desc" },
           size: structures.length,
         },
         aggregations: {
-          sum_budget_funding: {
+          sum_funding: {
             sum: {
               field: "participation_funding",
             },
@@ -111,7 +111,7 @@ export default function ClassificationsByComparison() {
                   field: "participation_is_coordinator",
                 },
                 aggregations: {
-                  sum_budget_funding: {
+                  sum_funding: {
                     sum: {
                       field: "participation_funding",
                     },
@@ -142,7 +142,7 @@ export default function ClassificationsByComparison() {
   const seriesParticipation: any[] = [];
   const seriesProject: any[] = [];
   const structuresBudget = data?.aggregations?.by_structure_budget?.buckets ?? [];
-  const structuresParticipation = data?.aggregations?.by_structure_participation?.buckets ?? [];
+  const structuresParticipation = data?.aggregations?.by_structure_funding?.buckets ?? [];
   const structuresProject = data?.aggregations?.by_structure_project?.buckets ?? [];
   (structuresBudget?.[0]?.by_classifications?.buckets ?? []).forEach((bucket) => {
     seriesBudget.push({
@@ -159,24 +159,24 @@ export default function ClassificationsByComparison() {
   (structuresParticipation?.[0]?.by_classifications?.buckets ?? []).forEach((bucket) => {
     seriesParticipation.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: bucket.key, prefix: "classification" }) } },
-      data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_funding?.value ?? 0),
+      data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_funding?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesParticipation.push({
       color: getCssColor({ name: bucket.key, prefix: "classification" }),
-      data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
+      data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_funding?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
   });
   (structuresProject?.[0]?.by_classifications?.buckets ?? []).forEach((bucket) => {
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: bucket.key, prefix: "classification" }) } },
-      data: structuresProject.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
+      data: structuresProject.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.by_unique_project?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesProject.push({
       color: getCssColor({ name: bucket.key, prefix: "classification" }),
-      data: structuresProject.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
+      data: structuresProject.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.by_unique_project?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
   });

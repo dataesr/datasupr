@@ -38,11 +38,29 @@ export default function Overview({ name }: { name: string | undefined }) {
                   missing: 0,
                 },
                 aggregations: {
-                  sum_budget_funding: {
+                  sum_funding: {
                     sum: {
                       field: "participation_funding",
                     },
                   },
+                },
+              },
+            },
+          },
+          by_unique_project: {
+            cardinality: {
+              field: "project_id.keyword",
+            },
+          },
+          should_ignore_funding: {
+            terms: {
+              field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+              missing: 0,
+            },
+            aggregations: {
+              sum_funding: {
+                sum: {
+                  field: "participation_funding",
                 },
               },
             },
@@ -70,16 +88,17 @@ export default function Overview({ name }: { name: string | undefined }) {
     // Filter on not empty bucket
     .filter((bucket) => !!bucket)
     .map((bucket) => [
-      [[bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.doc_count ?? 0],
-      [[bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.doc_count ?? 0],
+      [[bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.doc_count ?? 0],
+      [[bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.doc_count ?? 0],
     ])
     .flat();
+  console.log((data?.aggregations?.by_project_type?.buckets ?? []))
   const seriesWithoutCoordinators = funders
     .map((funder) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder))
     // Filter on not empty bucket
     .filter((bucket) => !!bucket)
     .map((bucket) => [
-      [bucket.key, bucket?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_funding?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0), 0), bucket?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.doc_count ?? 0), 0)],
+      [bucket.key, bucket?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0, bucket?.by_unique_project?.value ?? 0],
     ])
     .flat();
   const colorsWithCoordinators = funders.map((funder) => [{ pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } }, getCssColor({ name: funder, prefix: "funder" })]).flat();

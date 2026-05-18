@@ -40,7 +40,7 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
                   field: "participation_is_coordinator",
                 },
                 aggregations: {
-                  unique_projects: {
+                  by_unique_project: {
                     cardinality: {
                       field: "project_id.keyword",
                     },
@@ -64,11 +64,42 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
                       missing: 0,
                     },
                     aggregations: {
-                      sum_budget_funding: {
+                      sum_funding: {
                         sum: {
                           field: "participation_funding",
                         },
                       },
+                    },
+                  },
+                },
+              },
+              by_unique_project: {
+                cardinality: {
+                  field: "project_id.keyword",
+                },
+              },
+              should_ignore_budget: {
+                terms: {
+                  field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
+                  missing: 0,
+                },
+                aggregations: {
+                  sum_budget: {
+                    sum: {
+                      field: "project_budgetFinanced",
+                    },
+                  },
+                },
+              },
+              should_ignore_funding: {
+                terms: {
+                  field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+                  missing: 0,
+                },
+                aggregations: {
+                  sum_funding: {
+                    sum: {
+                      field: "participation_funding",
                     },
                   },
                 },
@@ -123,8 +154,7 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       data: years.map((year) => instrument
         ?.by_project_year?.buckets?.find((bucket) => bucket.key === year)
-        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_budget?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget?.value ?? 0), 0)
-        ?? 0),
+        ?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: instrument.key,
     });
@@ -133,7 +163,7 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0),
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
@@ -142,7 +172,7 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0),
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
@@ -150,8 +180,7 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       data: years.map((year) => instrument
         ?.by_project_year?.buckets?.find((bucket) => bucket.key === year)
-        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_funding?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget_funding?.value ?? 0), 0)
-        ?? 0),
+        ?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       marker: { enabled: false },
       name: instrument.key,
     });
@@ -159,7 +188,7 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
+        ?.find((bucket) => bucket.key === 1)?.by_unique_project?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
@@ -167,7 +196,7 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
+        ?.find((bucket) => bucket.key === 0)?.by_unique_project?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
@@ -175,8 +204,7 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       data: years.map((year) => instrument
         ?.by_project_year?.buckets?.find((bucket) => bucket.key === year)
-        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.unique_projects?.value ?? 0), 0)
-        ?? 0),
+        ?.by_unique_project?.value ?? 0),
       marker: { enabled: false },
       name: instrument.key,
     });

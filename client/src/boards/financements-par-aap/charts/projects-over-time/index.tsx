@@ -41,7 +41,7 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
                   size: 25,
                 },
                 aggregations: {
-                  unique_projects: {
+                  by_unique_project: {
                     cardinality: {
                       field: "project_id.keyword",
                     },
@@ -65,7 +65,7 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
                       missing: 0,
                     },
                     aggregations: {
-                      sum_budget_funding: {
+                      sum_funding: {
                         sum: {
                           field: "participation_funding",
                         },
@@ -75,6 +75,45 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
                 },
               },
             },
+          },
+          by_project_year: {
+            terms: {
+              field: "project_year",
+              size: 25,
+            },
+            aggregations: {
+              by_unique_project: {
+                cardinality: {
+                  field: "project_id.keyword",
+                },
+              },
+              should_ignore_budget: {
+                terms: {
+                  field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
+                  missing: 0,
+                },
+                aggregations: {
+                  sum_budget: {
+                    sum: {
+                      field: "project_budgetFinanced",
+                    },
+                  },
+                },
+              },
+              should_ignore_funding: {
+                terms: {
+                  field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+                  missing: 0,
+                },
+                aggregations: {
+                  sum_funding: {
+                    sum: {
+                      field: "participation_funding",
+                    },
+                  },
+                },
+              },
+            }
           },
         },
       },
@@ -124,9 +163,9 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
     seriesBudgetRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
-        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
-        ?.reduce((acc, curr) => acc + (curr?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.should_ignore_budget?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0), 0)
-        ?? 0),
+        ?.find((bucket) => bucket.key === funder)?.by_project_year?.buckets
+        ?.find((bucket) => bucket.key === year)?.should_ignore_budget?.buckets
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: funder,
     });
@@ -136,7 +175,7 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0),
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
@@ -146,16 +185,16 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0),
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesFundingRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
-        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
-        ?.reduce((acc, curr) => acc + (curr?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0), 0)
-        ?? 0),
+        ?.find((bucket) => bucket.key === funder)?.by_project_year?.buckets
+        ?.find((bucket) => bucket.key === year)?.should_ignore_funding?.buckets
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0),
       marker: { enabled: false },
       name: funder,
     });
@@ -164,7 +203,7 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets
-        ?.find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0),
+        ?.find((bucket) => bucket.key === year)?.by_unique_project?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
@@ -173,16 +212,15 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets
-        ?.find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0),
+        ?.find((bucket) => bucket.key === year)?.by_unique_project?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesProjectRegion.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
-        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
-        ?.reduce((acc, curr) => acc + (curr?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0), 0)
-         ?? 0),
+        ?.find((bucket) => bucket.key === funder)?.by_project_year?.buckets
+        ?.find((bucket) => bucket.key === year)?.by_unique_project?.value ?? 0),
       marker: { enabled: false },
       name: funder,
     });

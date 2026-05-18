@@ -31,7 +31,7 @@ export default function Cards() {
               size: 25,
             },
             aggregations: {
-              unique_projects: {
+              by_unique_project: {
                 cardinality: {
                   field: "project_id.keyword",
                 },
@@ -48,7 +48,7 @@ export default function Cards() {
                   },
                 },
               },
-              sum_budget_funding: {
+              sum_funding: {
                 sum: {
                   field: "participation_funding",
                 },
@@ -79,8 +79,8 @@ export default function Cards() {
     dataFunders[funder] = {
       projects: years.map((year) => ({
         x: year,
-        y: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0,
-        yDisplay: dataByFunder?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0,
+        y: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.by_unique_project?.value ?? 0,
+        yDisplay: dataByFunder?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.by_unique_project?.value ?? 0,
       })),
       budget: years.map((year) => ({
         x: year,
@@ -89,8 +89,8 @@ export default function Cards() {
       })),
       participation: years.map((year) => ({
         x: year,
-        y: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.sum_budget_funding?.value ?? 0,
-        yDisplay: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.sum_budget_funding?.value ?? 0,
+        y: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.sum_funding?.value ?? 0,
+        yDisplay: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.sum_funding?.value ?? 0,
       })),
     };
   });
