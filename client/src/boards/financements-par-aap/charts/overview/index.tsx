@@ -92,7 +92,6 @@ export default function Overview({ name }: { name: string | undefined }) {
       [[bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.doc_count ?? 0],
     ])
     .flat();
-  console.log((data?.aggregations?.by_project_type?.buckets ?? []))
   const seriesWithoutCoordinators = funders
     .map((funder) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder))
     // Filter on not empty bucket
