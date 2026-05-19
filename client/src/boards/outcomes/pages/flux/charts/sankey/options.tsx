@@ -38,7 +38,7 @@ const SITUATION_LABELS: Record<string, string> = {
     SIT13: "Sortants",
 };
 
-const SITUATION_COLOR_KEYS: Record<string, string> = {
+export const SITUATION_COLOR_KEYS: Record<string, string> = {
     SIT01: "outcomes-l1",
     SIT02: "outcomes-l2",
     SIT03: "outcomes-l3",
@@ -48,7 +48,7 @@ const SITUATION_COLOR_KEYS: Record<string, string> = {
     SIT07: "outcomes-cpge",
     SIT08: "outcomes-iut",
     SIT09: "outcomes-lp",
-    SIT10: "outcomes-autres",
+    SIT10: "outcomes-sante",
     SIT11: "outcomes-ecoles",
     SIT12: "outcomes-autres",
     SIT13: "outcomes-sortants-diplomes",
@@ -66,7 +66,7 @@ const SITUATION_YEAR_LEVEL: Record<string, string> = {
     SIT09: "3e année",
 };
 
-const SITUATION_ORDER: Record<string, number> = {
+export const SITUATION_ORDER: Record<string, number> = {
     SIT05: 0,  // M2
     SIT04: 1,  // M1
     SIT03: 2,  // L3
@@ -253,7 +253,8 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
         chart: {
             height: 800,
             backgroundColor: "transparent",
-            spacingBottom: 120,
+            spacingBottom: 100,
+
             spacingLeft: 24,
             spacingRight: 24,
             events: {
