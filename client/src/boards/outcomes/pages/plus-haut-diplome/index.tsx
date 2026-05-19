@@ -169,7 +169,7 @@ export default function PlusHautDiplomePage() {
             </Row>
             <Row >
                 <Title as="h1" look="h4" className="fr-mb-3w">
-                    Plus haut diplôme obtenu en {lastYearLabel} par les néo-bacheliers inscrits en L1 en 2019
+                    Plus haut diplôme obtenu lors de la session 2023 par les néo-bacheliers inscrits en L1 en 2019
                 </Title>
             </Row>
             <Row gutters>

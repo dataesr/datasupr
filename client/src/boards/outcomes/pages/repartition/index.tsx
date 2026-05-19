@@ -110,13 +110,17 @@ export default function RepartitionPage() {
 
     const activeFiltersElement = (() => {
         const tags = FILTER_SECTIONS.flatMap(s =>
-            s.fields.filter(f => filters[f.field]).map(f => ({ field: f.field, label: f.label, value: filters[f.field]! }))
+            s.fields.filter(f => filters[f.field]).map(f => {
+                const value = filters[f.field]!;
+                const option = data?.filterOptions?.[f.field]?.find((o) => o.key === value);
+                return { field: f.field, label: f.label, valueLabel: option?.label ?? value };
+            })
         );
         if (!tags.length) return null;
         return (
             <TagGroup className="fr-mt-1w fr-mb-1w">
-                {tags.map(({ field, label, value }) => (
-                    <DismissibleTag key={field} size="sm" onClick={() => updateFilter(field, null)}>{label} : {value}</DismissibleTag>
+                {tags.map(({ field, label, valueLabel }) => (
+                    <DismissibleTag key={field} size="sm" onClick={() => updateFilter(field, null)}>{label} : {valueLabel}</DismissibleTag>
                 ))}
             </TagGroup>
         );

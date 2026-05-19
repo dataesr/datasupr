@@ -197,7 +197,7 @@ export default function HeatmapTab() {
                                         fr: (
                                             <>
                                                 {minCell && maxCell && minCell !== maxCell && (
-                                                    ` parmi les néo-bacheliers inscrits en L1 en 2019, l'écart de diplomation dans le supérieur à 5 ans entre ${maxCell.vLabel} × ${maxCell.hLabel} (${maxCell.pct.toFixed(0)}%) et ${minCell.vLabel} × ${minCell.hLabel} (${minCell.pct.toFixed(0)}%) atteint ${Math.round(maxCell.pct - minCell.pct)} points. Sur l'ensemble de la cohorte, ${ensemblePct.toFixed(0)}% sont diplômés de l'enseignement supérieur.`
+                                                    ` parmi les néo-bacheliers inscrits en L1 en 2019, l'écart de diplomation dans le supérieur à 4 ans entre ${maxCell.vLabel} × ${maxCell.hLabel} (${maxCell.pct.toFixed(0)}%) et ${minCell.vLabel} × ${minCell.hLabel} (${minCell.pct.toFixed(0)}%) atteint ${Math.round(maxCell.pct - minCell.pct)} points. Sur l'ensemble de la cohorte, ${ensemblePct.toFixed(0)}% sont diplômés de l'enseignement supérieur.`
                                                 )}
                                             </>
                                         ),

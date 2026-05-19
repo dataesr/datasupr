@@ -9,9 +9,7 @@ import { normalizeString } from "../../utils/utils";
 
 function HeroSection() {
   const navigate = useNavigate();
-  //TODO : button -> link
-  // Hx -> Title
-  // p -> Text
+
   return (
     <section className="accueil-hero">
       <Container>
@@ -58,10 +56,6 @@ function HeroSection() {
   );
 }
 
-// =============================================================================
-// QUICK ACCESS SECTION
-// =============================================================================
-// TODO : 2024 -> .env
 function QuickAccessSection() {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");

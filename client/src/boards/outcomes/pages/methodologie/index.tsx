@@ -77,6 +77,9 @@ export default function MethodologiePage() {
                                 Sorties récurrentes sans dépasser le niveau BAC+2 : non-diplômés qui ne s'inscrivent pas plus de 2 fois dans l'enseignement supérieur durant la période d'observation et ne dépasse jamais le niveau BAC+2.
                             </li>
                         </ul>
+                        <p>
+                            Application basée sur une première version conçue et développée par Caroline WIRTH.
+                        </p>
                     </div>
                 </Col>
             </Row>

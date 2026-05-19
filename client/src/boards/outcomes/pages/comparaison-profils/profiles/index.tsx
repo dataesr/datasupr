@@ -260,7 +260,7 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal
                 options={lineOptions}
             />
 
-            <Text size="sm" className="fr-mt-3w">Répartition à 5 ans par profil</Text>
+            <Text size="sm" className="fr-mt-3w">Répartition à 4 ans par profil</Text>
             <ChartWrapper
                 config={{ id: "outcomes-profiles-stack", title: "Diplômés du supérieur vs sortants sans diplôme", integrationURL }}
                 options={stackOptions}

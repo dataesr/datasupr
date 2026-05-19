@@ -45,7 +45,7 @@ export default function Router() {
         />
         <Route path="/financements-par-aap/*" element={<Suspense><FundingsRoutes /></Suspense>} />
         <Route
-          path="/structures-finance/accueil"
+          path="/structures-finance/"
           element={<Navigate to="/structures-finance/accueil" replace />}
         />
         <Route

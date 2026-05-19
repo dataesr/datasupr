@@ -27,8 +27,7 @@ export default function DiplomaDonut() {
         filters,
     });
 
-    const lastYearLabel = data ? YEAR_LABELS[data.lastYear] || `N+${data.lastYear}` : "";
-    const title = `Plus haut diplôme obtenu en ${lastYearLabel}`;
+    const title = `Plus haut diplôme obtenu lors de la session 2023 par les néo-bacheliers inscrits en L1 en 2019`;
 
     const options = useMemo(() => {
         if (!data?.rows.length) return null;
