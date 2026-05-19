@@ -133,6 +133,7 @@ export default function StructureSelector({ setStructures }) {
   const handleStructureChange = (selectedStructure?: string) => {
     if (selectedStructure) {
       searchParams.set("structure", selectedStructure);
+      searchParams.delete("region")
       setSearchParams(searchParams);
     }
   };
