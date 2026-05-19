@@ -27,7 +27,7 @@ export default function Regions({ name }: { name: string | undefined }) {
     aggregations: {
       by_classifications_project: {
         terms: {
-          field: "co_partners_fr_labs_region.keyword",
+          field: "participant_region_with_labs.keyword",
           size: 15,
         },
         aggregations: {
@@ -54,7 +54,7 @@ export default function Regions({ name }: { name: string | undefined }) {
       },
       by_classifications_budget: {
         terms: {
-          field: "co_partners_fr_labs_region.keyword",
+          field: "participant_region_with_labs.keyword",
           order: { "sum_budget": "desc" },
           size: 15,
         },
@@ -94,7 +94,7 @@ export default function Regions({ name }: { name: string | undefined }) {
       },
       by_classifications_funding: {
         terms: {
-          field: "co_partners_fr_labs_region.keyword",
+          field: "participant_region_with_labs.keyword",
           order: { "sum_funding": "desc" },
           size: 15,
         },
