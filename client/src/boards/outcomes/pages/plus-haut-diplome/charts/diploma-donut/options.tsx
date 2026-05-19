@@ -33,7 +33,7 @@ export function createDiplomaDonutOptions(
         {
             name: "Non diplômés",
             y: nonDiplomes.effectif,
-            color: "var(--purple-glycine-main-494)",
+            color: "var(--outcomes-sortants-non-diplomes)",
         },
     ];
 

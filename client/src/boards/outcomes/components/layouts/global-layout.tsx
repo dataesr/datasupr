@@ -10,13 +10,15 @@ import "./styles.scss"
 import "../../colors.scss";
 
 
+const BASE = "/devenir-etudiants/entrants-en-L1-2019";
+
 const NAV_ITEMS = [
-  { key: "flux", labelKey: "flux", to: "/devenir-etudiants/flux" },
-  { key: "repartition", labelKey: "repartition", to: "/devenir-etudiants/repartition" },
-  { key: "plus-haut-diplome", labelKey: "plusHautDiplome", to: "/devenir-etudiants/plus-haut-diplome" },
-  { key: "croisements", labelKey: "croisements", to: "/devenir-etudiants/croisements" },
-  { key: "comparaison-profils", labelKey: "comparaisonProfils", to: "/devenir-etudiants/comparaison-profils" },
-  { key: "methodologie", labelKey: "methodologie", to: "/devenir-etudiants/methodologie" },
+  { key: "flux", labelKey: "flux", to: `${BASE}/flux` },
+  { key: "repartition", labelKey: "repartition", to: `${BASE}/repartition` },
+  { key: "plus-haut-diplome", labelKey: "plusHautDiplome", to: `${BASE}/plus-haut-diplome` },
+  { key: "croisements", labelKey: "croisements", to: `${BASE}/croisements` },
+  { key: "comparaison-profils", labelKey: "comparaisonProfils", to: `${BASE}/comparaison-profils` },
+  { key: "methodologie", labelKey: "methodologie", to: `${BASE}/methodologie` },
 ] as const;
 
 export default function GlobalLayout() {
@@ -89,7 +91,7 @@ export default function GlobalLayout() {
       <main id="main-content" tabIndex={-1}>
         <Outlet />
       </main>
-      <Footer href="/devenir-etudiants/flux" title="#dataESR tableaux de bord" />
+      <Footer href={`${BASE}/flux`} title="#dataESR tableaux de bord" />
     </>
   );
 }

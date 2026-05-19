@@ -38,7 +38,7 @@ export default function Router() {
       <Route path="/contact" element={<Suspense><ContactLayout /></Suspense>}>
         <Route index element={<Suspense><ContactPage /></Suspense>} />
       </Route>
-      <Route path="/devenir-etudiants" element={<Navigate to="/devenir-etudiants/flux" replace />} />
+      <Route path="/devenir-etudiants" element={<Navigate to="/devenir-etudiants/entrants-en-L1-2019/flux" replace />} />
       <Route path="/devenir-etudiants/*" element={<Suspense><OutcomesRoutes /></Suspense>} />
       <Route path="/financements-par-aap" element={<Navigate to="/financements-par-aap/accueil" replace />} />
       <Route path="/financements-par-aap/*" element={<Suspense><FundingsRoutes /></Suspense>} />

@@ -22,9 +22,9 @@ const RouteWithTitle = ({ titleKey, element }) => {
 export default function OutcomesRoutes() {
   return (
     <Routes>
-      <Route element={<GlobalLayout />}>
+      <Route index element={<Navigate to="entrants-en-L1-2019/flux" replace />} />
+      <Route path="entrants-en-L1-2019" element={<GlobalLayout />}>
         <Route index element={<Navigate to="flux" replace />} />
-        <Route path="" element={<Navigate to="flux" replace />} />
         <Route path="flux" element={<RouteWithTitle titleKey="flux" element={<FluxPage />} />} />
         <Route path="repartition" element={<RouteWithTitle titleKey="repartition" element={<RepartitionPage />} />} />
         <Route path="plus-haut-diplome" element={<RouteWithTitle titleKey="plusHautDiplome" element={<PlusHautDiplomePage />} />} />
