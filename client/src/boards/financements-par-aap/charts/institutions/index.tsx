@@ -170,7 +170,12 @@ export default function Institutions({ name }: { name: string | undefined }) {
         },
       },
     },
-  };
+  }
+  if (region) {
+    const filters = body.query.bool.filter.filter((f) => !f?.terms?.["participant_region.keyword"])// && f?.terms?.["participant_region.keyword"]?.length === 0 && f?.terms?.["participant_region.keyword"]?.[0] === region)
+    filters.push({ terms: { "participant_region_with_labs.keyword": [region] } })
+    body.query.bool.filter = filters
+  }
 
   const { data, isLoading } = useQuery({
     queryKey: ["fundings-institutions", region, structure, yearMax, yearMin],
