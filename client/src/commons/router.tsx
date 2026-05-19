@@ -44,6 +44,7 @@ export default function Router() {
       <Route path="/financements-par-aap/*" element={<Suspense><FundingsRoutes /></Suspense>} />
       <Route path="/structures-finance" element={<Navigate to="/structures-finance/accueil" replace />} />
       <Route path="/structures-finance/*" element={<Suspense><StructuresFinanceRoutes /></Suspense>} />
+      {/* Before adding a dashboard in production, add your dashboard in the mongoDB collection "Board" */}
 
       {!isProd && (
         <>
