@@ -12,10 +12,6 @@ const FILTER_FIELDS: OutcomesFilterField[] = [
     "devenir_en_un_an", "type_de_trajectoire",
 ];
 
-const YEAR_LABELS: Record<number, string> = {
-    0: "2019-2020", 1: "2020-2021", 2: "2021-2022", 3: "2022-2023", 4: "2023-2024",
-};
-
 export default function DiplomaDonut() {
     const [searchParams] = useSearchParams();
     const filters = FILTER_FIELDS.reduce<Partial<Record<OutcomesFilterField, string | null>>>(
