@@ -59,7 +59,7 @@ const getEsQuery = ({ regions, structures, yearMax = years[years.length - 1], ye
   const regionsNotNull = regions?.filter((region) => region !== null);
   if (regionsNotNull?.length ?? 0 > 0) {
     query.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Structures de recherche", "Universités et assimilés"] } });
-    query.query.bool.filter.push({ terms: { "participant_region_with_labs.keyword": regionsNotNull } });
+    query.query.bool.filter.push({ terms: { "participant_region.keyword": regionsNotNull } });
   };
   return query;
 };
