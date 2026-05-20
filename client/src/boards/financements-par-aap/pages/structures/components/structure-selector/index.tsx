@@ -28,6 +28,9 @@ export default function StructureSelector({ setStructures }) {
       },
     },
   };
+  bodyRegions.query.bool.filter.push({ term: { participant_is_main_parent: 1 } });
+  bodyRegions.query.bool.filter.push({ term: { participant_type: "institution" } });
+  bodyRegions.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } });
   if (typology) {
     bodyRegions.query.bool.filter.push({ wildcard: { "participant_typologie_1.keyword": typology } });
   }
@@ -61,6 +64,9 @@ export default function StructureSelector({ setStructures }) {
       },
     },
   };
+  bodyTypologies.query.bool.filter.push({ term: { participant_is_main_parent: 1 } });
+  bodyTypologies.query.bool.filter.push({ term: { participant_type: "institution" } });
+  bodyTypologies.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } });
   if (region) {
     bodyTypologies.query.bool.filter.push({ wildcard: { "address.region.keyword": region } });
   }
@@ -92,6 +98,9 @@ export default function StructureSelector({ setStructures }) {
       },
     },
   };
+  bodyStructures.query.bool.filter.push({ term: { participant_is_main_parent: 1 } });
+  bodyStructures.query.bool.filter.push({ term: { participant_type: "institution" } });
+  bodyStructures.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Universités et assimilés"] } });
   if (region) {
     bodyStructures.query.bool.filter.push({ wildcard: { "address.region.keyword": region } });
   }
@@ -124,6 +133,7 @@ export default function StructureSelector({ setStructures }) {
   const handleStructureChange = (selectedStructure?: string) => {
     if (selectedStructure) {
       searchParams.set("structure", selectedStructure);
+      searchParams.delete("region")
       setSearchParams(searchParams);
     }
   };

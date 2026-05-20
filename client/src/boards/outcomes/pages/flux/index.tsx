@@ -240,7 +240,7 @@ export default function FluxPage() {
                 </Col>
                 <Col lg={8}>
                     <div className="outcomes-flux-page__content">
-                        <ChartWrapper.Title config={{ id: "outcomes-flux-sankey", title: "Parcours des néo-bacheliers inscrits en L1 en 2019" }} />
+                        <ChartWrapper.Title config={{ id: "outcomes-flux-sankey", title: `Parcours des néo-bacheliers inscrits en L1 en 2019 (seuil : ${minValue} étudiant${minValue > 1 ? "s" : ""})` }} />
                         {activeFiltersElement}
                         {(isLoading || (isFetching && !data)) && <DefaultSkeleton height="540px" />}
                         {!isLoading && isFetching && data && (

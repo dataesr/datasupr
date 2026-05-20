@@ -36,9 +36,10 @@ export default function Cards() {
                   field: "project_id.keyword",
                 },
               },
-              should_ignore: {
+              should_ignore_budget: {
                 terms: {
-                  field: "participant_ignore_total_budget",
+                  field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
+                  missing: 0,
                 },
                 aggregations: {
                   sum_budget: {
@@ -48,9 +49,17 @@ export default function Cards() {
                   },
                 },
               },
-              sum_funding: {
-                sum: {
-                  field: "participation_funding",
+              should_ignore_funding: {
+                terms: {
+                  field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+                  missing: 0,
+                },
+                aggregations: {
+                  sum_funding: {
+                    sum: {
+                      field: "participation_funding",
+                    },
+                  },
                 },
               },
             },
@@ -77,27 +86,27 @@ export default function Cards() {
   funders.forEach((funder) => {
     const dataByFunder = (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder);
     dataFunders[funder] = {
+      budget: years.map((year) => ({
+        x: year,
+        y: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0,
+        yDisplay: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.should_ignore_budget?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0,
+      })),
+      funding: years.map((year) => ({
+        x: year,
+        y: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0,
+        yDisplay: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_funding?.value ?? 0,
+      })),
       projects: years.map((year) => ({
         x: year,
         y: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.by_unique_project?.value ?? 0,
         yDisplay: dataByFunder?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.by_unique_project?.value ?? 0,
       })),
-      budget: years.map((year) => ({
-        x: year,
-        y: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.should_ignore?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0,
-        yDisplay: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.should_ignore?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0,
-      })),
-      participation: years.map((year) => ({
-        x: year,
-        y: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.sum_funding?.value ?? 0,
-        yDisplay: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.sum_funding?.value ?? 0,
-      })),
     };
   });
 
-  const maxProjects: number = Math.max.apply(null, Object.values(dataFunders).map((dataFunder: any) => dataFunder.projects.map((project) => project.y)).flat());
   const maxBudget: number = Math.max.apply(null, Object.values(dataFunders).map((dataFunder: any) => dataFunder.budget.map((budget) => budget.y)).flat());
-  const maxParticipation: number = Math.max.apply(null, Object.values(dataFunders).map((dataFunder: any) => dataFunder.participation.map((participation) => participation.y)).flat());
+  const maxFunding: number = Math.max.apply(null, Object.values(dataFunders).map((dataFunder: any) => dataFunder.funding.map((funding) => funding.y)).flat());
+  const maxProjects: number = Math.max.apply(null, Object.values(dataFunders).map((dataFunder: any) => dataFunder.projects.map((project) => project.y)).flat());
 
   return (
     <>
@@ -176,7 +185,7 @@ export default function Cards() {
         ))}
       </Row>
       <Row gutters>
-        <Col xs="12" md="2" key={`card-participation-intro`}>
+        <Col xs="12" md="2" key={`card-funding-intro`}>
           <div style={{ height: "100%", display: "flex", alignItems: "center" }}>
             <Title as="h2" className="fr-mb-0" style={{ fontSize: "0.8rem", letterSpacing: "0.3px", lineHeight: 1.3, textTransform: "uppercase" }}>
               Financements perçus pour les projets auxquels {structure ? "l'établissement" : "la région"} participe
@@ -185,17 +194,17 @@ export default function Cards() {
           </div>
         </Col>
         {Object.keys(dataFunders).map((funder) => (
-          <Col xs="12" md="2" key={`card-participation-${funder}`}>
+          <Col xs="12" md="2" key={`card-funding-${funder}`}>
             {isLoading ? <DefaultSkeleton height="250px" /> :
               <ChartCard
                 color={getCssColor({ name: funder, prefix: "funder" })}
-                data={dataFunders[funder].participation}
+                data={dataFunders[funder].funding}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
                 title={`Financements perçus des projets ${funder}`}
                 titleAs="h3"
                 tooltipFormatter={function (this: any) { return `${formatCompactNumber(this.y)} € par ${funder} en ${this.key}` }}
-                value={`${formatCompactNumber(dataFunders[funder].participation.filter((participation) => yearMin && yearMax && participation.x >= yearMin && participation.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0))} €`}
-                yAxisMax={maxParticipation}
+                value={`${formatCompactNumber(dataFunders[funder].funding.filter((funding) => yearMin && yearMax && funding.x >= yearMin && funding.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0))} €`}
+                yAxisMax={maxFunding}
               />
             }
           </Col>

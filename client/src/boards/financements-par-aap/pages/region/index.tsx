@@ -35,6 +35,7 @@ export default function regions() {
       },
     },
   }
+  body.query.bool.filter.push({ terms: { "participant_typologie_1.keyword": ["Ecoles, instituts et assimilés", "Organismes de recherche", "Structures de recherche", "Universités et assimilés"] } });
 
   const { data } = useQuery({
     queryKey: ["fundings-regions"],

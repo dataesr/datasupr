@@ -7,7 +7,7 @@ import Callout from "../../../../../../components/callout";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getCssColor } from "../../../../../../utils/colors";
 import { type OutcomesFilterField, type OutcomesFluxLink, useOutcomesFlux } from "../../../../api";
-import { createSankeyOptions } from "./options";
+import { createSankeyOptions, SITUATION_ORDER } from "./options";
 
 interface SankeyChartProps {
     exportMetadata?: {
@@ -192,11 +192,32 @@ function SankeyChartView({
         };
     }, [exportMetadata?.filtersText, links, totalStudents]);
 
+    const presentSituations = useMemo(() => {
+        const set = new Set<string>();
+        links.forEach((l) => {
+            if (l.source_situation) set.add(l.source_situation);
+            if (l.target_situation) set.add(l.target_situation);
+        });
+        return [...set].sort((a, b) => (SITUATION_ORDER[a] ?? 99) - (SITUATION_ORDER[b] ?? 99));
+    }, [links]);
+
     if (!options) return null;
+
+    const legend = (
+        <div className="outcomes-flux-sankey__legend">
+            {presentSituations.map((sit) => (
+                <span key={sit} className="outcomes-flux-sankey__legend-item">
+                    <span className={`outcomes-flux-sankey__legend-color outcomes-flux-sankey__legend-color--${sit}`} />
+                    {SITUATION_LABELS[sit] || sit}
+                </span>
+            ))}
+        </div>
+    );
 
     return (
         <ChartWrapper
             hideTitle={hideTitle}
+            legend={legend}
             config={{
                 id: "outcomes-flux-sankey",
                 integrationURL: `/integration?chart_id=outcomesFluxSankey&${searchParams.toString()}`,

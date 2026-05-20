@@ -35,7 +35,7 @@ export default function DisplayRegion() {
     { id: "apercu", label: "Aperçu" },
     { id: "financements", label: "Volume et répartition des financements" },
     { id: "evolution", label: "Evolution temporelle" },
-    { id: "partenaires", label: "Institutions partenaires" },
+    // { id: "partenaires", label: "Institutions partenaires" },
     { id: "institutions", label: "Institutions" },
     { id: "laboratoires", label: "Laboratoires" },
     { id: "disciplines", label: "Disciplines" },
