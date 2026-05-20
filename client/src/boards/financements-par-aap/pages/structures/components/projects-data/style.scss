@@ -46,3 +46,17 @@
   font-size: 0.75rem;
   width: 100%;
 }
+
+.fundings-datatable__page-size {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .fr-select {
+    width: auto;
+  }
+}
+
+.fr-pagination__list {
+  flex-wrap: nowrap;
+}

@@ -1,4 +1,4 @@
-import { Col, Row } from "@dataesr/dsfr-plus";
+import { Col, Row, Text } from "@dataesr/dsfr-plus";
 import { useEffect, useState } from "react";
 
 import "./style.scss";
@@ -134,71 +134,76 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
       </div>
       <Row className="fr-mt-1w">
         <Col>
-          <select
-            className="button-action"
-            onChange={(e) => setPagination({ from: 0, size: Number(e.target.value) })}
-            value={pagination.size}
-          >
-            {[10, 20, 30, 40, 50].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                {pageSize}
-              </option>
-            ))}
-          </select>
-          résultats par page
+          <div className="fundings-datatable__page-size">
+            <select
+              className="fr-select"
+              onChange={(e) => setPagination({ from: 0, size: Number(e.target.value) })}
+              value={pagination.size}
+            >
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  {pageSize}
+                </option>
+              ))}
+            </select>
+            résultats par page
+          </div>
         </Col>
-        <Col style={{ textAlign: 'center' }}>
-          <button
-            className="button-action border p-1 rounded"
-            onClick={() => setPagination({ ...pagination, from: 0 })}
-            disabled={pagination.from === 0}
-          >
-            <i className="ri-arrow-left-double-line" />
-          </button>
-          <button
-            className="button-action border p-1 rounded"
-            onClick={() => setPagination({ ...pagination, from: pagination.from - pagination.size })}
-            disabled={pagination.from === 0}
-          >
-            <i className="ri-arrow-left-s-line" />
-          </button>
-          <span className="fr-mx-1w">
-            Page
-            {' '}
-            <input
-              className="border p-1 rounded w-16"
-              max={Math.ceil(numberOfResults / pagination.size)}
-              min="1"
-              onChange={(e) => setPagination({ ...pagination, from: (Number(e.target.value) - 1) * pagination.size })}
-              type="number"
-              value={(pagination.from / pagination.size) + 1}
-            />
-            {' '}
-            of
-            {' '}
-            <strong>
-              {Math.ceil(numberOfResults / pagination.size)}
-            </strong>
-          </span>
-          <button
-            className="button-action border p-1 rounded"
-            onClick={() => setPagination({ ...pagination, from: pagination.from + pagination.size })}
-            disabled={(pagination.from / pagination.size) + 1 === Math.ceil(numberOfResults / pagination.size)}
-          >
-            <i className="ri-arrow-right-s-line" />
-          </button>
-          <button
-            className="button-action border p-1 rounded"
-            onClick={() => setPagination({ ...pagination, from: Math.floor(numberOfResults / pagination.size) * pagination.size })}
-            disabled={(pagination.from / pagination.size) + 1 === Math.ceil(numberOfResults / pagination.size)}
-          >
-            <i className="ri-arrow-right-double-line" />
-          </button>
+        <Col>
+          <nav role="navigation" className="fr-pagination" aria-label="Pagination">
+            <ul className="fr-pagination__list">
+              <li>
+                <button
+                  className="fr-pagination__link fr-pagination__link--first"
+                  disabled={pagination.from === 0}
+                  onClick={() => setPagination({ ...pagination, from: 0 })}
+                  title="Première page"
+                >
+                  Première page
+                </button>
+              </li>
+              <li>
+                <button
+                  className="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+                  disabled={pagination.from === 0}
+                  onClick={() => setPagination({ ...pagination, from: pagination.from - pagination.size })}
+                  title="Page précédente"
+                >
+                  Page précédente
+                </button>
+              </li>
+              <li>
+                <a className="fr-pagination__link" aria-current="page">
+                  {(pagination.from / pagination.size) + 1}
+                </a>
+              </li>
+              <li>
+                <button
+                  className="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+                  disabled={(pagination.from / pagination.size) + 1 === Math.ceil(numberOfResults / pagination.size)}
+                  onClick={() => setPagination({ ...pagination, from: pagination.from + pagination.size })}
+                  title="Page suivante"
+                >
+                  Page suivante
+                </button>
+              </li>
+              <li>
+                <button
+                  className="fr-pagination__link fr-pagination__link--last"
+                  disabled={(pagination.from / pagination.size) + 1 === Math.ceil(numberOfResults / pagination.size)}
+                  onClick={() => setPagination({ ...pagination, from: Math.floor(numberOfResults / pagination.size) * pagination.size })}
+                  title="Dernière page"
+                >
+                  Dernière page
+                </button>
+              </li>
+            </ul>
+          </nav>
         </Col>
         <Col style={{ textAlign: 'right' }}>
-          <i>
+          <Text className="fr-text--sm fr-mb-0">
             Résultats {pagination.from + 1} - {Math.min(pagination.from + pagination.size, numberOfResults)} / {numberOfResults}
-          </i>
+          </Text>
         </Col>
       </Row>
     </>
