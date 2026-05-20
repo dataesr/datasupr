@@ -78,10 +78,7 @@ export default function MethodologiePage() {
                             </li>
                         </ul>
                         <p>
-                            Application basée sur une première version conçue et développée par Caroline WIRTH.
-                        </p>
-                        <p className="text-right">
-                            Département des études statistiques de l'enseignement supérieur (MESRE-SIES)
+                            Application basée sur une première version conçue et développée par Caroline WIRTH - département des études statistiques de l'enseignement supérieur (MESRE-SIES)
                         </p>
                     </div>
                 </Col>

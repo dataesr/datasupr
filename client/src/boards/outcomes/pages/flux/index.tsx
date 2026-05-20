@@ -1,5 +1,5 @@
 import { Button, Col, Container, DismissibleTag, Row, TagGroup, Title } from "@dataesr/dsfr-plus";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
@@ -92,11 +92,20 @@ export default function FluxPage() {
     const cohortYear = searchParams.get("cohorte_annee") || DEFAULT_COHORT_YEAR;
     const cohortSituation = searchParams.get("cohorte_situation") || DEFAULT_COHORT_SITUATION;
 
+    const activeFilterCount = FILTER_FIELDS.filter((f) => !!filters[f]).length;
+    const suggestedThreshold = Math.max(MIN_MIN_VALUE, Math.round(DEFAULT_MIN_VALUE / (activeFilterCount + 1)));
+    const isManualOverride = searchParams.has("min_value");
     const parsedMinValue = Number.parseInt(searchParams.get("min_value") || "", 10);
-    const minValue = Number.isInteger(parsedMinValue)
+    const minValue = isManualOverride && Number.isInteger(parsedMinValue)
         ? Math.max(MIN_MIN_VALUE, parsedMinValue)
-        : DEFAULT_MIN_VALUE;
+        : suggestedThreshold;
     const [sliderValue, setSliderValue] = useState(minValue);
+
+    useEffect(() => {
+        if (!isManualOverride) {
+            setSliderValue(suggestedThreshold);
+        }
+    }, [isManualOverride, suggestedThreshold]);
     const { yearEnd, yearStart } = useMemo(() => {
         const raw = searchParams.get("annee_rel");
         if (!raw) {
@@ -181,11 +190,13 @@ export default function FluxPage() {
 
     const updateMinValue = (value: number) => {
         const nextParams = new URLSearchParams(searchParams);
-        if (value === DEFAULT_MIN_VALUE) {
-            nextParams.delete("min_value");
-        } else {
-            nextParams.set("min_value", String(value));
-        }
+        nextParams.set("min_value", String(value));
+        setSearchParams(nextParams);
+    };
+
+    const resetMinValue = () => {
+        const nextParams = new URLSearchParams(searchParams);
+        nextParams.delete("min_value");
         setSearchParams(nextParams);
     };
 
@@ -299,7 +310,10 @@ export default function FluxPage() {
                                         <label className="fr-label" id="flux-min-value-range-label">
                                             Affichage des flux
                                             <span className="fr-hint-text">
-                                                Afficher les flux regroupant au minimum {sliderValue} étudiants. Ajustez le seuil pour filtrer les flux les plus faibles et mieux visualiser les parcours majoritaires.
+                                                {!isManualOverride && activeFilterCount > 0
+                                                    ? <>Seuil ajusté automatiquement à {sliderValue} étudiant{sliderValue > 1 ? "s" : ""} en fonction de vos {activeFilterCount} filtre{activeFilterCount > 1 ? "s" : ""} actif{activeFilterCount > 1 ? "s" : ""}. Vous pouvez l'ajuster manuellement ci-dessous.</>
+                                                    : <>Afficher les flux regroupant au minimum {sliderValue} étudiant{sliderValue > 1 ? "s" : ""}. Ajustez le seuil pour filtrer les flux les plus faibles et mieux visualiser les parcours majoritaires.</>
+                                                }
                                             </span>
                                         </label>
                                         <div className="fr-range fr-range--sm">
@@ -322,6 +336,13 @@ export default function FluxPage() {
                                             <span className="fr-range__max" aria-hidden="true">1 000</span>
                                         </div>
                                         <div className="fr-messages-group" id="flux-min-value-range-messages" aria-live="polite" />
+                                        {isManualOverride && (
+                                            <div className="fr-mt-1w">
+                                                <button className="fr-btn fr-btn--sm fr-btn--tertiary" onClick={resetMinValue} type="button">
+                                                    Réinitialiser le seuil automatique ({suggestedThreshold})
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </Col>
                             </Row>
