@@ -18,7 +18,7 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
       if ((id === sorting?.id) && (sorting?.order === 'desc')) icon = <i className="ri-sort-desc" />
       return (
         <button
-          className="button-action border p-1 rounded"
+          className="fr-btn fundings-datatable__test1"
           onClick={() => handleSort(column)}
         >
           {icon}
@@ -67,24 +67,24 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
             <div className="fr-table__content">
               <table>
                 <thead>
-                  <tr className="test0">
+                  <tr>
                     {columns.map((column) => {
                       return (
-                        <th className="test1" key={column.id} scope="col">
+                        <th key={column.id} scope="col">
                           {column.isPlaceholder ? null : (
                             <>
-                              <span className="test2 first">
+                              <div className="test">
                                 {column?.label ?? column.id}
                                 {' '}
-                                {column?.isFilterable && <i className="ri-filter-line" />}
+                                {column?.isFilterable}
                                 {' '}
                                 {getSortableIcon(column)}
-                              </span>
-                              <div className="test2 second">
+                              </div>
+                              <div>
                                 {column?.isFilterable && (
                                   column?.isFilterableBySelect && aggregations?.[column.id] ? (
                                     <select
-                                      className="fr-select"
+                                      className="fr-select fundings-datatable__test3"
                                       id={`fundings-structure-data-${column.id}`}
                                       name={`fundings-structure-data-${column.id}`}
                                       onChange={(event) => handleFilter(column, event)}
@@ -101,7 +101,7 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
                                     </select>
                                   ) : (
                                     <input
-                                      className="border"
+                                      className="fr-input fundings-datatable__test2"
                                       onChange={(event) => handleFilter(column, event)}
                                       type="text"
                                       value={inputs[column.id]}
