@@ -273,10 +273,9 @@ export default function Regions({ name }: { name: string | undefined }) {
 
   const config = {
     comment: {
-      "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement selon les grandes classifications disciplinaires.
-        Les barres représentent le nombre / le financement global ou perçu des projets rattachés à chaque domaine, permettant d’identifier les champs scientifiques les plus présents dans les projets auxquels l’établissement participe.
+      "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement par région.
+        Les barres représentent le nombre / le financement global ou perçu des projets rattachés à chaque région, en prenant en compte les régions des laboratoires dans l'établissement est tutelle. Les données d'adresse du RNSR sont mobilisées. Ces données sont imparfaites et ne contiennet pas directement l'information de la région, qui est inférée à partir de l'adresse.
         Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
-        Les thématiques ont été estimées par IA, à partir du titre, résumé et mots clés des projets.
       </>
     },
     id: "regions",
