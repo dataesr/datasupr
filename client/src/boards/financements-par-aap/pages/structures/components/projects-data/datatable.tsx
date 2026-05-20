@@ -61,69 +61,77 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
 
   return (
     <>
-      <table className="fundings-datatable">
-        <thead>
-          <tr>
-            {columns.map((column) => {
-              return (
-                <th key={column.id}>
-                  {column.isPlaceholder ? null : (
-                    <>
-                      <div>
-                        {column?.label ?? column.id}
-                        {' '}
-                        {column?.isFilterable && <i className="ri-filter-line" />}
-                        {' '}
-                        {getSortableIcon(column)}
-                      </div>
-                      {column?.isFilterable && (
-                        column?.isFilterableBySelect && aggregations?.[column.id] ? (
-                          <select
-                            className="fr-mb-1w fr-select"
-                            id={`fundings-structure-data-${column.id}`}
-                            name={`fundings-structure-data-${column.id}`}
-                            onChange={(event) => handleFilter(column, event)}
-                            value={inputs[column.id]}
-                          >
-                            <option key='all' value=''>
-                              Tout
-                            </option>
-                            {(aggregations?.[column.id]?.buckets ?? []).map((bucket) => (
-                              <option key={bucket.key} value={bucket.key}>
-                                {bucket.key} ({bucket.doc_count})
-                              </option>
-                            ))}
-                          </select>
-                        ) : (
-                          <div>
-                            <input
-                              className="border"
-                              onChange={(event) => handleFilter(column, event)}
-                              type="text"
-                              value={inputs[column.id]}
-                            />
-                          </div>
-                        )
-                      )}
-                    </>
-                  )}
-                </th>
-              )
-            })}
-          </tr>
-        </thead>
-        <tbody>
-          {dataTable.map((row) => (
-            <tr key={row.uniqId}>
-              {columns.map((column) => (
-                <td key={`${column.id}-${row.id}`}>
-                  {column.getCellValue ? column.getCellValue(row) : row?.[column?.id]}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="fr-table fr-table--sm fr-table--multiline fundings-datatable">
+        <div className="fr-table__wrapper">
+          <div className="fr-table__container">
+            <div className="fr-table__content">
+              <table>
+                <thead>
+                  <tr className="test0">
+                    {columns.map((column) => {
+                      return (
+                        <th className="test1" key={column.id} scope="col">
+                          {column.isPlaceholder ? null : (
+                            <>
+                              <span className="test2 first">
+                                {column?.label ?? column.id}
+                                {' '}
+                                {column?.isFilterable && <i className="ri-filter-line" />}
+                                {' '}
+                                {getSortableIcon(column)}
+                              </span>
+                              <div className="test2 second">
+                                {column?.isFilterable && (
+                                  column?.isFilterableBySelect && aggregations?.[column.id] ? (
+                                    <select
+                                      className="fr-select"
+                                      id={`fundings-structure-data-${column.id}`}
+                                      name={`fundings-structure-data-${column.id}`}
+                                      onChange={(event) => handleFilter(column, event)}
+                                      value={inputs[column.id]}
+                                    >
+                                      <option key='all' value=''>
+                                        Tout
+                                      </option>
+                                      {(aggregations?.[column.id]?.buckets ?? []).map((bucket) => (
+                                        <option key={bucket.key} value={bucket.key}>
+                                          {bucket.key} ({bucket.doc_count})
+                                        </option>
+                                      ))}
+                                    </select>
+                                  ) : (
+                                    <input
+                                      className="border"
+                                      onChange={(event) => handleFilter(column, event)}
+                                      type="text"
+                                      value={inputs[column.id]}
+                                    />
+                                  )
+                                )}
+                              </div>
+                            </>
+                          )}
+                        </th>
+                      )
+                    })}
+                  </tr>
+                </thead>
+                <tbody>
+                  {dataTable.map((row) => (
+                    <tr key={row.uniqId}>
+                      {columns.map((column) => (
+                        <td key={`${column.id}-${row.id}`}>
+                          {column.getCellValue ? column.getCellValue(row) : row?.[column?.id]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
       <Row className="fr-mt-1w">
         <Col>
           <select
