@@ -18,7 +18,7 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
       if ((id === sorting?.id) && (sorting?.order === 'desc')) icon = <i className="ri-sort-desc" />
       return (
         <button
-          className="fr-btn fundings-datatable__test1"
+          className="fr-btn fundings-datatable_filter"
           onClick={() => handleSort(column)}
         >
           {icon}
@@ -73,7 +73,7 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
                         <th key={column.id} scope="col">
                           {column.isPlaceholder ? null : (
                             <>
-                              <div className="test">
+                              <div className="fundings-datatable__header">
                                 {column?.label ?? column.id}
                                 {' '}
                                 {column?.isFilterable}
@@ -84,7 +84,7 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
                                 {column?.isFilterable && (
                                   column?.isFilterableBySelect && aggregations?.[column.id] ? (
                                     <select
-                                      className="fr-select fundings-datatable__test3"
+                                      className="fr-select fundings-datatable__select"
                                       id={`fundings-structure-data-${column.id}`}
                                       name={`fundings-structure-data-${column.id}`}
                                       onChange={(event) => handleFilter(column, event)}
@@ -101,7 +101,7 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
                                     </select>
                                   ) : (
                                     <input
-                                      className="fr-input fundings-datatable__test2"
+                                      className="fr-input fundings-datatable__input"
                                       onChange={(event) => handleFilter(column, event)}
                                       type="text"
                                       value={inputs[column.id]}

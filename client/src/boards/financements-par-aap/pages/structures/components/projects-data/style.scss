@@ -5,6 +5,11 @@
     font-size: 0.75rem;
     vertical-align: top;
     font-weight: 700;
+    padding: 0.5rem;
+  }
+
+  th:nth-child(5) {
+    min-width: 10rem;
   }
 
   td {
@@ -16,26 +21,27 @@
   }
 }
 
-.test {
+.fundings-datatable__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.25rem;
+  padding: 2px 4px;
 }
 
-.fundings-datatable__test1 {
+.fundings-datatable_filter {
   min-height: unset;
   padding: 0;
   line-height: 1;
 }
 
-.fundings-datatable__test2 {
+.fundings-datatable__input {
   height: 2rem;
   font-size: 0.75rem;
   width: 100%;
 }
 
-.fundings-datatable__test3 {
+.fundings-datatable__select {
   height: 2rem;
   font-size: 0.75rem;
   width: 100%;
