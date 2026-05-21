@@ -105,7 +105,7 @@ export default function ProjectsData() {
   });
 
   const { data: dataAll, isLoading: isLoadingAll } = useQuery({
-    queryKey: ["fundings-data-all", structure, yearMax, yearMin],
+    queryKey: ["fundings-data-all", region, structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify({ ...body, from: 0, size: 10000, aggregations }),
@@ -224,7 +224,7 @@ export default function ProjectsData() {
       ].join('\n');
       // Create a hidden download link
       const link = document.createElement('a');
-      link.download = `tableaux_financements_par_aap_${structure}_${yearMin}_${yearMax}.csv`;
+      link.download = `tableaux_financements_par_aap_${structure ?? region}_${yearMin}_${yearMax}.csv`;
       link.href = URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8' }));
       link.style.visibility = 'hidden';
       // Append link to DOM, trigger click, and clean up
