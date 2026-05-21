@@ -19,7 +19,7 @@ import ProjectsOverTime from "../../charts/projects-over-time";
 import Breadcrumb from "../../components/breadcrumb";
 import Cards from "../../components/cards";
 import { years } from "../../utils";
-// import ProjectsData from "./components/projects-data";
+import ProjectsData from "./components/projects-data";
 
 import "./styles.scss";
 
@@ -40,7 +40,7 @@ export default function DisplayRegion() {
     { id: "laboratoires", label: "Laboratoires" },
     { id: "disciplines", label: "Disciplines" },
     { id: "instruments", label: "Instruments" },
-    // { id: "donnees", label: "Données" },
+    { id: "donnees", label: "Données" },
   ];
 
   const handleNavClick = (section: string) => {
@@ -265,11 +265,9 @@ export default function DisplayRegion() {
                   </Row>
                 </>
               )}
-              {/*
               {(section === "donnees") && (
                 <ProjectsData />
               )}
-              */}
             </>
           )}
       </Container>
