@@ -240,8 +240,13 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
 
   const config = {
     comment: {
-      "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets ou de leurs financements associés, ventilée par instrument, pour les projets européens, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
-      </>
+      "fr": <>{`Ce graphique présente l’évolution temporelle du nombre de projets ou de leurs financements associés, ventilée par 
+        instrument, pour les projets européens, à travers des lignes empilées permettant d’apprécier la contribution relative de 
+        chacun dans le temps. ${structure ? "Le type de participation est distingué, en pointillé quand l'établissement est \
+        coordinateur, en couleur simple s'il est partenaire non-coordinateur." : ""} Le financement global représente le volume 
+        total de financements des projets auxquels participe ${structure ? "l'établissement" : "la région"}. Le financement perçu 
+        approxime la part réelle allouée à chaque ${structure ? "établissement" : "région"} partenaire d’un projet (en 
+        assimilant consommation et subvention pour le PIA).`}</>,
     },
     id: "instrumentsOverTimeForEurope",
     integrationURL: `/integration?chart_id=instrumentsOverTimeForEurope&${searchParams.toString()}`,

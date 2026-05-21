@@ -104,7 +104,13 @@ export default function Overview({ name }: { name: string | undefined }) {
   const colorsWithoutCoordinators = funders.map((funder) => [getCssColor({ name: funder, prefix: "funder" })]).flat();
 
   const config = {
-    comment: { "fr": <>Ce graphique met en regard le volume de projets et les financements perçus associés : la largeur des barres représente le nombre de projets, tandis que leur hauteur correspond au financement perçu. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA). </> },
+    comment: {
+      "fr": <>{`Ce graphique met en regard le volume de projets et les financements perçus associés : la largeur des barres 
+        représente le nombre de projets, tandis que leur hauteur correspond au financement perçu. ${structure ? "Le type de \
+        participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire \
+        non-coordinateur.": ""} Le financement perçu approxime la part réelle allouée à chaque ${structure ? "établissement" : "région"} 
+        partenaire d’un projet (en assimilant consommation et subvention pour le PIA).`}</>,
+    },
     id: "overview",
     integrationURL: `/integration?chart_id=overview&${searchParams.toString()}`,
     title: `Structure du financement : nombre de projets et financements perçus associés pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name} ${getYearRangeLabel({ yearMax, yearMin })}`,

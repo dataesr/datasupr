@@ -232,7 +232,15 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
   };
 
   const config = {
-    comment: { "fr": <>Ce graphique indique, par financeur, le nombre, les financements globaux et les financements perçus des projets auxquels participe l'établissement {name}. Pour chaque financeur, la barre correspondante est subdivisée en deux en fonction du rôle de l'établissement : la partie pointillée quand l'établissement est coordinateur, en couleur simple quand il est partenaire non coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
+    comment: {
+      "fr": <>{`Ce graphique indique, par financeur, le nombre, les financements globaux et les financements perçus des projets 
+        auxquels participe ${structure ? "l'établissement" : "la région"}. ${structure ? "Pour chaque financeur, la barre \
+        correspondante est subdivisée en deux en fonction du rôle de l'établissement : la partie pointillée quand l'établissement \
+        est coordinateur, en couleur simple quand il est partenaire non coordinateur." : ""} Le financement global représente 
+        le volume total de financements des projets auxquels participe ${structure ? "l'établissement" : "la région"}. Le 
+        financement perçu approxime la part réelle allouée à chaque ${structure ? "établissement" : "région"} partenaire 
+        d’un projet (en assimilant consommation et subvention pour le PIA).`}</>,
+    },
     id: "projectsByFunder",
     integrationURL: `/integration?chart_id=projectsByFunder&${searchParams.toString()}`,
     title,

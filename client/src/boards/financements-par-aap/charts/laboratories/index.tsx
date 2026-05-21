@@ -321,10 +321,15 @@ export default function Laboratories({ name }: { name: string | undefined }) {
 
   const config = {
     comment: {
-      "fr": <>Ce graphe présente la répartition des projets financés par appels à projets (AAP) dans lesquels l'établissement est impliqué, ventilée par laboratoire et par financeur.
-        Les sources de données ne donnent pas toujours accès au niveau laboratoire. Pour les projets européens, c'est un travail mené avec 5 organismes pour ajouter ce niveau, avec un délai d'actualisation de un an. Pour le PIA, les données au niveau laboratoire ne sont pas disponibles.
-        Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
-      </>
+      "fr": <>{`Ce graphe présente la répartition des projets financés par appels à projets (AAP) dans lesquels 
+        ${structure ? "l'établissement" : "la région"} est impliqué${structure ? "" : "e"}, ventilée par laboratoire et par 
+        financeur. Les sources de données ne donnent pas toujours accès au niveau laboratoire. Pour les projets européens, 
+        c'est un travail mené avec 5 organismes pour ajouter ce niveau, avec un délai d'actualisation de un an. Pour le PIA, 
+        les données au niveau laboratoire ne sont pas disponibles. ${structure ? "Le type de participation est distingué, en \
+        pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur." : ""} Le 
+        financement global représente le volume total de financements des projets auxquels participe 
+        ${structure ? "l'établissement" : "la région"}. Le financement perçu approxime la part réelle allouée à chaque 
+        ${structure ? "établissement" : "région"} partenaire d’un projet (en assimilant consommation et subvention pour le PIA).`}</>,
     },
     id: "laboratories",
     integrationURL: `/integration?chart_id=laboratories&${searchParams.toString()}`,

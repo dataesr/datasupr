@@ -328,8 +328,13 @@ export default function InternationalPartners({ name }: { name: string | undefin
 
   const config = {
     comment: {
-      "fr": <>Ce graphe montre quels partenaires internationaux collaborent le plus avec l'établissement sur les projets financés par AAP.
-        Les barres représentent le nombre, les financements globaux et perçus pour les projets auxquels l'établissement participe avec chaque partenaire. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA). </>
+      "fr": <>{`Ce graphe montre quels partenaires internationaux collaborent le plus avec ${structure ? "l'établissement" : "la région"} 
+        sur les projets financés par AAP. Les barres représentent le nombre, les financements globaux et perçus pour les projets 
+        auxquels ${structure ? "l'établissement" : "la région"} participe avec chaque partenaire. ${structure ? "Le type de \
+        participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire \
+        non-coordinateur." : ""} Le financement global représente le volume total de financements des projets auxquels participe 
+        ${structure ? "l'établissement" : "la région"}. Le financement perçu approxime la part réelle allouée à chaque 
+        ${structure ? "établissement" : "région"} partenaire d’un projet (en assimilant consommation et subvention pour le PIA).`}</>,
     },
     id: "internationalPartners",
     integrationURL: `/integration?chart_id=internationalPartners&${searchParams.toString()}`,
