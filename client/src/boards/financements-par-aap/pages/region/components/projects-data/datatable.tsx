@@ -10,6 +10,17 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
   });
   const [inputs, setInputs] = useState(inputsTmp)
 
+  const getLabelByBucketKey = (key: string) => {
+    switch (key) {
+      case '1':
+        return 'Oui'
+      case '0':
+        return 'Non'
+      default:
+        return key
+    }
+  }
+
   const getSortableIcon = (column) => {
     if (column.isSortable) {
       const id = column?.sortableField ?? column.id
@@ -95,7 +106,7 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
                                       </option>
                                       {(aggregations?.[column.id]?.buckets ?? []).map((bucket) => (
                                         <option key={bucket.key} value={bucket.key}>
-                                          {bucket.key} ({bucket.doc_count})
+                                          {getLabelByBucketKey(bucket.key.toString())} ({bucket.doc_count})
                                         </option>
                                       ))}
                                     </select>
